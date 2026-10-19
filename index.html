@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kartei App</title>
-    <!-- Einbindung einer modernen Google-Schriftart (Inter & Plus Jakarta Sans) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -47,7 +46,7 @@
         /* Modal & Dialoge */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 100; }
         .modal-content { background: var(--card-bg); padding: 28px; border-radius: 20px; width: 90%; max-width: 480px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border: 1px solid var(--border-color); }
-        .modal-content textarea { width: 100%; height: 90px; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 13px; margin-top: 8px; outline: none; }
+        .modal-content textarea { width: 100%; height: 120px; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 12px; margin-top: 8px; outline: none; font-family: monospace; }
         .modal-content input { width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 14px; font-size: 14px; outline: none; }
         .modal-content input:focus { border-color: var(--primary); }
 
@@ -99,21 +98,21 @@
 <div id="backup-modal" class="modal hidden">
     <div class="modal-content">
         <h3 style="margin-top:0; font-size:20px;">Sicherung & Übertragung</h3>
-        <p style="font-size: 13px; color: var(--text-muted);">Kopiere diesen Text, um deine Karten zu sichern oder zu übertragen.</p>
+        <p style="font-size: 13px; color: var(--text-muted);">Kopiere diesen Text oder füge deinen Sicherungstext ein.</p>
         <textarea id="backup-text" readonly></textarea>
         <button class="btn-primary" style="width:100%; margin-top:12px;" onclick="copyBackup()">Text kopieren</button>
         <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border-color);">
-        <input type="text" id="restore-input" placeholder="Sicherungstext hier einfügen...">
-        <button class="btn-primary" style="width:100%; background:var(--green);" onclick="restoreData()">Wiederherstellen</button>
+        <textarea id="restore-input" placeholder="Sicherungstext hier einfügen..."></textarea>
+        <button class="btn-primary" style="width:100%; background:var(--green); margin-top:8px;" onclick="restoreData()">Wiederherstellen</button>
         <button class="btn-secondary" style="width:100%; margin-top:8px;" onclick="toggleBackup(false)">Schließen</button>
     </div>
 </div>
 
-<!-- Modal für Ordner/Karten -->
+<!-- Modal für Ordner / Unterordner -->
 <div id="folder-modal" class="modal hidden">
     <div class="modal-content">
-        <h3 style="margin-top:0; font-size:20px;">Neuen Ordner anlegen</h3>
-        <input type="text" id="new-folder-name" placeholder="Ordnername (z.B. Französisch)">
+        <h3 style="margin-top:0; font-size:20px;" id="folder-modal-title">Neuen Ordner anlegen</h3>
+        <input type="text" id="new-folder-name" placeholder="Ordnername (z.B. Grammatik)">
         <button class="btn-primary" style="width:100%;" onclick="createFolder()">Erstellen</button>
         <button class="btn-secondary" style="width:100%; margin-top:8px;" onclick="toggleFolderModal(false)">Abbrechen</button>
     </div>
@@ -130,18 +129,9 @@
 </div>
 
 <script>
-    let appData = JSON.parse(localStorage.getItem('karteiFullData')) || {
-        folders: [
-            { id: 1, name: "französisch", color: "#bae6fd", cards: [
-                { id: 101, term: "eine Ware", def: "une marchandise", status: "offen" },
-                { id: 102, term: "weltweit, global", def: "mondial / mondiale", status: "falsch" },
-                { id: 103, term: "die ganze Welt", def: "l'économie mondiale", status: "mittel" }
-            ]},
-            { id: 2, name: "Cytologie", color: "#dcfce7", cards: [] }
-        ]
-    };
+    let appData = JSON.parse(localStorage.getItem('karteiFullData')) || { folders: [] };
 
-    let view = { name: "home", folderIdx: 0 };
+    let view = { name: "home", currentFolderId: null };
     let setup = { filter: "all", questionCount: 1, availableCards: [] };
     let quiz = { cards: [], index: 0, flipped: false };
 
@@ -150,11 +140,41 @@
         render();
     }
 
+    // Hilfsfunktionen für Hierarchie
+    function getSubfolders(parentId) {
+        return appData.folders.filter(f => f.parent === parentId);
+    }
+
+    function getAllSubfolderIds(folderId) {
+        let ids = [folderId];
+        let children = getSubfolders(folderId);
+        children.forEach(child => {
+            ids = ids.concat(getAllSubfolderIds(child.id));
+        });
+        return ids;
+    }
+
+    function getCardsForFolder(folderId) {
+        let folder = appData.folders.find(f => f.id === folderId);
+        return folder ? folder.cards || [] : [];
+    }
+
+    function getAllCardsRecursive(folderId) {
+        let ids = getAllSubfolderIds(folderId);
+        let cards = [];
+        ids.forEach(id => {
+            cards = cards.concat(getCardsForFolder(id));
+        });
+        return cards;
+    }
+
     function render() {
         const app = document.getElementById('app');
 
-        // 1. HAUPTÜBERSICHT
+        // 1. HAUPTÜBERSICHT (WURZELORDNER)
         if (view.name === "home") {
+            let rootFolders = getSubfolders(null);
+
             let html = `
                 <div class="header">
                     <div class="logo">🗂️ Kartei</div>
@@ -163,67 +183,112 @@
                         <div class="icon-box" onclick="toggleFolderModal(true)">➕</div>
                     </div>
                 </div>
-                <div class="banner">
-                    <span style="font-weight:600; font-size:14px; color:#334155;">Ergebnis der letzten Prüfung in „Französisch Vokabeln“</span>
-                    <div>
-                        <button class="btn-primary" style="padding:8px 16px; font-size:13px;">Ansehen</button>
-                    </div>
-                </div>
             `;
 
-            appData.folders.forEach((f, idx) => {
-                let letter = f.name.charAt(0).toUpperCase();
+            if(rootFolders.length === 0) {
                 html += `
-                    <div class="card-item" onclick="openFolder(${idx})">
+                    <div class="banner">
+                        <span>Noch keine Ordner vorhanden. Klicke auf 📥 und füge deinen Sicherungstext ein!</span>
+                    </div>
+                `;
+            }
+
+            rootFolders.forEach((f) => {
+                let letter = f.name.charAt(0).toUpperCase();
+                let subfolders = getSubfolders(f.id);
+                let allCards = getAllCardsRecursive(f.id);
+                let color = f.color || "#bae6fd";
+
+                html += `
+                    <div class="card-item" onclick="openFolder('${f.id}')">
                         <div style="display:flex; align-items:center;">
-                            <div class="badge-letter" style="background:${f.color}">${letter}</div>
+                            <div class="badge-letter" style="background:${color}">${letter}</div>
                             <div>
                                 <h3 style="margin:0; font-size:17px; font-weight:700;">${f.name}</h3>
-                                <span style="font-size:13px; color:var(--text-muted); font-weight:600;">${f.cards.length} Karten</span>
+                                <span style="font-size:13px; color:var(--text-muted); font-weight:600;">
+                                    ${allCards.length} Karten ${subfolders.length > 0 ? '· ' + subfolders.length + ' Unterordner' : ''}
+                                </span>
                             </div>
                         </div>
-                        <span style="color:#94a3b8; cursor:pointer;" onclick="event.stopPropagation(); deleteFolder(${idx})">🗑️</span>
+                        <span style="color:#94a3b8; cursor:pointer;" onclick="event.stopPropagation(); deleteFolder('${f.id}')">🗑️</span>
                     </div>
                 `;
             });
             app.innerHTML = html;
         }
 
-        // 2. ORDNER-ANSICHT
+        // 2. ORDNER- & UNTERORDNER-ANSICHT
         else if (view.name === "folder") {
-            let f = appData.folders[view.folderIdx];
-            let richtig = f.cards.filter(c => c.status === 'richtig').length;
-            let mittel = f.cards.filter(c => c.status === 'mittel').length;
-            let falsch = f.cards.filter(c => c.status === 'falsch').length;
-            let offen = f.cards.filter(c => c.status === 'offen' || !c.status).length;
+            let f = appData.folders.find(folder => folder.id === view.currentFolderId);
+            if (!f) { goHome(); return; }
+
+            let subfolders = getSubfolders(f.id);
+            let directCards = f.cards || [];
+            let allCardsInBranch = getAllCardsRecursive(f.id);
+
+            let richtig = allCardsInBranch.filter(c => c.s === 'richtig' || c.status === 'richtig').length;
+            let mittel = allCardsInBranch.filter(c => c.s === 'mittel' || c.status === 'mittel').length;
+            let falsch = allCardsInBranch.filter(c => c.s === 'falsch' || c.status === 'falsch').length;
+            let offen = allCardsInBranch.filter(c => (!c.s && !c.status) || c.s === 'offen' || c.status === 'offen').length;
 
             let html = `
-                <a class="back-link" onclick="goHome()">‹ Ordner</a>
+                <a class="back-link" onclick="${f.parent ? `openFolder('${f.parent}')` : 'goHome()'}">‹ ${f.parent ? 'Übergeordneter Ordner' : 'Hauptübersicht'}</a>
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <h1 style="margin:0; font-size:30px; font-weight:800; letter-spacing:-0.5px;">${f.name}</h1>
                     <div class="icon-box" onclick="toggleCardModal(true)">➕</div>
                 </div>
+
                 <div style="display:flex; gap:10px; margin: 16px 0;">
                     <span style="background:var(--green-bg); color:#065f46; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px;">● Richtig ${richtig}</span>
                     <span style="background:var(--yellow-bg); color:#92400e; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px;">● Mittel ${mittel}</span>
                     <span style="background:var(--red-bg); color:#991b1b; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px;">● Falsch ${falsch}</span>
                     <span style="background:#f1f5f9; color:#475569; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px;">● Offen ${offen}</span>
                 </div>
+
                 <div style="display:flex; gap:12px; margin-bottom:28px;">
                     <button class="btn-primary" onclick="openSetup()">Prüfung starten</button>
-                    <button class="btn-secondary" onclick="toggleCardModal(true)">+ Karte hinzufügen</button>
+                    <button class="btn-secondary" onclick="toggleFolderModal(true)">+ Unterordner anlegen</button>
                 </div>
-                <h3 style="color:var(--text-muted); font-size:13px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">Karten in diesem Ordner</h3>
             `;
 
-            f.cards.forEach((c, cIdx) => {
-                let statusColor = c.status === 'richtig' ? 'var(--green)' : c.status === 'mittel' ? 'var(--yellow)' : c.status === 'falsch' ? 'var(--red)' : '#cbd5e1';
+            if (subfolders.length > 0) {
+                html += `<h3 style="color:var(--text-muted); font-size:13px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">Unterordner</h3>`;
+                subfolders.forEach(sub => {
+                    let letter = sub.name.charAt(0).toUpperCase();
+                    let subCards = getAllCardsRecursive(sub.id);
+                    html += `
+                        <div class="card-item" onclick="openFolder('${sub.id}')">
+                            <div style="display:flex; align-items:center;">
+                                <div class="badge-letter" style="background:${sub.color || '#dcfce7'}">${letter}</div>
+                                <div>
+                                    <h3 style="margin:0; font-size:17px; font-weight:700;">${sub.name}</h3>
+                                    <span style="font-size:13px; color:var(--text-muted); font-weight:600;">${subCards.length} Karten</span>
+                                </div>
+                            </div>
+                            <span style="color:#94a3b8; cursor:pointer;" onclick="event.stopPropagation(); deleteFolder('${sub.id}')">🗑️</span>
+                        </div>
+                    `;
+                });
+            }
+
+            html += `<h3 style="color:var(--text-muted); font-size:13px; text-transform:uppercase; letter-spacing:0.5px; margin-top:24px; margin-bottom:12px;">Karten in diesem Ordner</h3>`;
+
+            if (directCards.length === 0) {
+                html += `<p style="color:var(--text-muted); font-size:14px;">Keine direkten Karten in diesem Ordner.</p>`;
+            }
+
+            directCards.forEach((c, cIdx) => {
+                let term = c.q || c.term;
+                let def = c.a || c.def;
+                let st = c.s || c.status;
+                let statusColor = st === 'richtig' ? 'var(--green)' : st === 'mittel' ? 'var(--yellow)' : st === 'falsch' ? 'var(--red)' : '#cbd5e1';
+                
                 html += `
                     <div class="card-item" style="cursor:default;">
                         <div>
                             <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${statusColor}; margin-right:10px;"></span>
-                            <strong style="font-size:16px;">${c.term}</strong>
-                            <div style="color:var(--text-muted); font-size:14px; margin-left:20px; font-weight:500;">${c.def}</div>
+                            <strong style="font-size:16px;">${term}</strong>
+                            <div style="color:var(--text-muted); font-size:14px; margin-left:20px; font-weight:500;">${def}</div>
                         </div>
                         <span style="color:#94a3b8; cursor:pointer;" onclick="deleteCard(${cIdx})">🗑️</span>
                     </div>
@@ -234,27 +299,27 @@
 
         // 3. PRÜFUNG STARTEN (EINSTELLUNGEN)
         else if (view.name === "setup") {
-            let f = appData.folders[view.folderIdx];
+            let f = appData.folders.find(folder => folder.id === view.currentFolderId);
             updateSetupCards();
 
             app.innerHTML = `
-                <a class="back-link" onclick="openFolder(${view.folderIdx})">‹ Ordner</a>
+                <a class="back-link" onclick="openFolder('${view.currentFolderId}')">‹ Ordner</a>
                 <h1 style="margin:0; font-size:28px; font-weight:800;">Prüfung starten</h1>
                 <p style="color:var(--text-muted); margin-top:2px; font-weight:600;">${f.name}</p>
 
                 <div class="section-title">Welche Karten?</div>
                 <div class="grid-2">
                     <div class="option-box ${setup.filter==='all'?'active':''}" onclick="setFilter('all')">
-                        <span>Alle Karten</span> <span class="count-badge">${f.cards.length}</span>
+                        <span>Alle Karten</span> <span class="count-badge">${getAllCardsRecursive(f.id).length}</span>
                     </div>
                     <div class="option-box ${setup.filter==='mittel_falsch'?'active':''}" onclick="setFilter('mittel_falsch')">
-                        <span>Mittel und falsch</span> <span class="count-badge">${f.cards.filter(c=>c.status==='mittel'||c.status==='falsch').length}</span>
+                        <span>Mittel und falsch</span> <span class="count-badge">${getAllCardsRecursive(f.id).filter(c=>(c.s||c.status)==='mittel'||(c.s||c.status)==='falsch').length}</span>
                     </div>
                     <div class="option-box ${setup.filter==='falsch'?'active':''}" onclick="setFilter('falsch')">
-                        <span>Nur falsch</span> <span class="count-badge">${f.cards.filter(c=>c.status==='falsch').length}</span>
+                        <span>Nur falsch</span> <span class="count-badge">${getAllCardsRecursive(f.id).filter(c=>(c.s||c.status)==='falsch').length}</span>
                     </div>
                     <div class="option-box ${setup.filter==='offen'?'active':''}" onclick="setFilter('offen')">
-                        <span>Noch nicht geprüft</span> <span class="count-badge">${f.cards.filter(c=>c.status==='offen'||!c.status).length}</span>
+                        <span>Noch nicht geprüft</span> <span class="count-badge">${getAllCardsRecursive(f.id).filter(c=>!(c.s||c.status)||(c.s||c.status)==='offen').length}</span>
                     </div>
                 </div>
 
@@ -274,25 +339,29 @@
         else if (view.name === "quiz") {
             let card = quiz.cards[quiz.index];
             if(!card) {
-                app.innerHTML = `<div style="text-align:center; padding:40px;"><h2>🎉 Prüfung abgeschlossen!</h2><button class="btn-primary" onclick="openFolder(${view.folderIdx})">Zurück zum Ordner</button></div>`;
+                app.innerHTML = `<div style="text-align:center; padding:40px;"><h2>🎉 Prüfung abgeschlossen!</h2><button class="btn-primary" onclick="openFolder('${view.currentFolderId}')">Zurück zum Ordner</button></div>`;
                 return;
             }
 
+            let term = card.q || card.term;
+            let def = card.a || card.def;
+            let currentFolder = appData.folders.find(f => f.id === view.currentFolderId);
+
             app.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                    <a class="back-link" onclick="openFolder(${view.folderIdx})" style="margin:0;">‹ Pausieren</a>
+                    <a class="back-link" onclick="openFolder('${view.currentFolderId}')" style="margin:0;">‹ Pausieren</a>
                     <span style="font-weight:700; color:var(--text-muted); font-size:14px;">Frage ${quiz.index + 1} von ${quiz.cards.length}</span>
                 </div>
 
                 <div class="paper-card">
                     <div class="paper-header">
                         <span>Frage</span>
-                        <span>${appData.folders[view.folderIdx].name}</span>
+                        <span>${currentFolder ? currentFolder.name : ''}</span>
                     </div>
                     <div class="paper-body">
-                        <div class="question-text">${card.term}</div>
+                        <div class="question-text">${term}</div>
                         ${quiz.flipped 
-                            ? `<div style="color:var(--primary); font-size:20px; font-weight:700; margin-top:10px;">${card.def}</div>` 
+                            ? `<div style="color:var(--primary); font-size:20px; font-weight:700; margin-top:10px;">${def}</div>` 
                             : `<input type="text" class="answer-input" placeholder="Schreibe deine Antwort ..." autofocus>`
                         }
                     </div>
@@ -313,15 +382,15 @@
     }
 
     // Hilfsfunktionen
-    function goHome() { view.name = "home"; render(); }
-    function openFolder(idx) { view = { name: "folder", folderIdx: idx }; render(); }
+    function goHome() { view = { name: "home", currentFolderId: null }; render(); }
+    function openFolder(id) { view = { name: "folder", currentFolderId: id }; render(); }
     function openSetup() { view.name = "setup"; render(); }
 
     function updateSetupCards() {
-        let cards = appData.folders[view.folderIdx].cards;
-        if(setup.filter === 'mittel_falsch') setup.availableCards = cards.filter(c => c.status === 'mittel' || c.status === 'falsch');
-        else if(setup.filter === 'falsch') setup.availableCards = cards.filter(c => c.status === 'falsch');
-        else if(setup.filter === 'offen') setup.availableCards = cards.filter(c => c.status === 'offen' || !c.status);
+        let cards = getAllCardsRecursive(view.currentFolderId);
+        if(setup.filter === 'mittel_falsch') setup.availableCards = cards.filter(c => (c.s||c.status) === 'mittel' || (c.s||c.status) === 'falsch');
+        else if(setup.filter === 'falsch') setup.availableCards = cards.filter(c => (c.s||c.status) === 'falsch');
+        else if(setup.filter === 'offen') setup.availableCards = cards.filter(c => !(c.s||c.status) || (c.s||c.status) === 'offen');
         else setup.availableCards = [...cards];
         
         setup.questionCount = Math.min(Math.max(1, setup.questionCount), setup.availableCards.length || 1);
@@ -343,6 +412,7 @@
 
     function rateQuizCard(status) {
         let card = quiz.cards[quiz.index];
+        card.s = status;
         card.status = status;
         quiz.index++;
         quiz.flipped = false;
@@ -352,28 +422,80 @@
     // Modals
     function toggleBackup(s) { document.getElementById('backup-modal').classList.toggle('hidden', !s); if(s) document.getElementById('backup-text').value = JSON.stringify(appData); }
     function copyBackup() { let t = document.getElementById('backup-text'); t.select(); navigator.clipboard.writeText(t.value); alert("Kopiert!"); }
-    function restoreData() { try { appData = JSON.parse(document.getElementById('restore-input').value); saveData(); toggleBackup(false); } catch(e){ alert("Ungültig!"); } }
+    
+    function restoreData() {
+        try {
+            let parsed = JSON.parse(document.getElementById('restore-input').value);
+            if (parsed.folders) {
+                appData = parsed;
+            } else if (Array.isArray(parsed)) {
+                appData = { folders: parsed };
+            } else {
+                appData = parsed;
+            }
+            saveData();
+            toggleBackup(false);
+            goHome();
+            alert("Sicherung erfolgreich geladen!");
+        } catch(e) {
+            alert("Ungültiges JSON-Format!");
+        }
+    }
 
-    function toggleFolderModal(s) { document.getElementById('folder-modal').classList.toggle('hidden', !s); }
+    function toggleFolderModal(s) { 
+        document.getElementById('folder-modal-title').innerText = view.currentFolderId ? "Unterordner anlegen" : "Neuen Hauptordner anlegen";
+        document.getElementById('folder-modal').classList.toggle('hidden', !s); 
+    }
+
     function createFolder() {
         let name = document.getElementById('new-folder-name').value.trim();
         if(name) { 
             const colors = ["#bae6fd", "#dcfce7", "#fef3c7", "#fbcfe8", "#e0e7ff"];
             let color = colors[appData.folders.length % colors.length];
-            appData.folders.push({ id: Date.now(), name, color, cards: [] }); 
+            appData.folders.push({ 
+                id: "folder_" + Date.now(), 
+                name: name, 
+                color: color, 
+                parent: view.currentFolderId, 
+                cards: [] 
+            }); 
             saveData(); 
             toggleFolderModal(false); 
         }
     }
-    function deleteFolder(idx) { if(confirm("Ordner löschen?")) { appData.folders.splice(idx, 1); saveData(); } }
+
+    function deleteFolder(id) { 
+        if(confirm("Ordner und alle enthaltenen Unterordner wirklich löschen?")) { 
+            let idsToDelete = getAllSubfolderIds(id);
+            appData.folders = appData.folders.filter(f => !idsToDelete.includes(f.id));
+            saveData(); 
+            if(view.currentFolderId === id) goHome();
+        } 
+    }
 
     function toggleCardModal(s) { document.getElementById('card-modal').classList.toggle('hidden', !s); }
+    
     function createCard() {
         let term = document.getElementById('new-card-term').value.trim();
         let def = document.getElementById('new-card-def').value.trim();
-        if(term && def) { appData.folders[view.folderIdx].cards.push({ id: Date.now(), term, def, status: 'offen' }); saveData(); toggleCardModal(false); }
+        if(term && def && view.currentFolderId) { 
+            let folder = appData.folders.find(f => f.id === view.currentFolderId);
+            if(folder) {
+                if(!folder.cards) folder.cards = [];
+                folder.cards.push({ id: "card_" + Date.now(), q: term, a: def, s: 'offen' }); 
+                saveData(); 
+                toggleCardModal(false); 
+            }
+        }
     }
-    function deleteCard(cIdx) { appData.folders[view.folderIdx].cards.splice(cIdx, 1); saveData(); }
+
+    function deleteCard(cIdx) { 
+        let folder = appData.folders.find(f => f.id === view.currentFolderId);
+        if(folder && folder.cards) {
+            folder.cards.splice(cIdx, 1); 
+            saveData(); 
+        }
+    }
 
     // Tastatur-Bedienung
     window.addEventListener('keydown', (e) => {
