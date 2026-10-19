@@ -3,14 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine App</title>
+    <title>Anki Web App</title>
     <style>
-        body { font-family: sans-serif; text-align: center; margin-top: 50px; background: #f4f4f9; }
-        h1 { color: #333; }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background: #121212; color: #e0e0e0; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { max-width: 650px; width: 100%; background: #1e1e1e; padding: 25px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        h1, h2 { text-align: center; color: #ffffff; margin-top: 0; }
+        .breadcrumb { font-size: 0.9em; color: #aaa; margin-bottom: 20px; cursor: pointer; }
+        .breadcrumb span:hover { color: #007bff; text-decoration: underline; }
+        
+        /* Ordner & Listen */
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; border: 1px solid #333; border-radius: 8px; margin-bottom: 10px; background: #2a2a2a; cursor: pointer; transition: 0.2s; }
+        .list-item:hover { background: #333333; border-color: #555; }
+        .badge { background: #007bff; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8em; }
+        
+        /* Eingabefelder & Buttons */
+        .form-section { background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #333; }
+        .form-group { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        input[type="text"] { flex: 1; min-width: 150px; padding: 10px; border: 1px solid #444; background: #121212; color: #fff; border-radius: 6px; font-size: 14px; }
+        input[type="text"]:focus { outline: none; border-color: #007bff; }
+        button { padding: 10px 16px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .btn-add { background: #007bff; color: white; }
+        .btn-add:hover { background: #0056b3; }
+        .btn-learn { background: #28a745; color: white; width: 100%; margin-top: 15px; font-size: 16px; padding: 14px; border-radius: 8px; }
+        .btn-learn:disabled { background: #444; cursor: not-allowed; }
+        .btn-delete { background: #dc3545; color: white; padding: 4px 8px; font-size: 0.8em; }
+
+        /* Anki-Karteikarte */
+        .card { width: 100%; min-height: 220px; background: #2a2a2a; border: 2px solid #007bff; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 25px; font-size: 22px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); user-select: none; margin-bottom: 20px; }
+        .card-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .answer-divider { width: 80%; border-top: 1px solid #444; margin: 15px 0; }
+
+        /* Anki-Bewertungsbuttons */
+        .anki-btns { display: flex; gap: 10px; width: 100%; }
+        .anki-btns button { flex: 1; padding: 14px; font-size: 14px; color: white; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .btn-again { background: #dc3545; }
+        .btn-again:hover { background: #bd2130; }
+        .btn-hard { background: #ffc107; color: #111; }
+        .btn-hard:hover { background: #d39e00; }
+        .btn-good { background: #28a745; }
+        .btn-good:hover { background: #1e7e34; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <h1>Hallo Welt! 🚀</h1>
-    <p>Meine App läuft über GitHub Pages.</p>
+
+<div class="container">
+    <div class="breadcrumb" id="breadcrumb" onclick="navToPath([])">📁 Hauptübersicht</div>
+
+    <!-- VERWALTUNGS-ANSICHT -->
+    <div id="view-manage">
+        <h1 id="current-title">Hauptordner</h1>
+        
+        <div class="form-section">
+            <h3 style="margin-top:0; font-size:14px; color:#aaa;">+ Unterordner anlegen</h3>
+            <div class="form-group">
+                <input type="text" id="folder-input" placeholder="Ordnername (z.B. Biologie)">
+                <button class="btn-add" onclick="addFolder()">Erstellen</button>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 style="margin-top:0; font-size:14px; color:#aaa;">+ Anki-Karte hinzufügen</h3>
+            <div class="form-group">
+                <input type="text" id="term-input" placeholder="Begriff / Frage (Vorderseite)">
+                <input type="text" id="def-input" placeholder="Definition / Antwort (Rückseite)">
+                <button class="btn-add" onclick="addCard()">Hinzufügen</button>
+            </div>
+        </div>
+
+        <button class="btn-learn" id="btn-start-learn" onclick="startLearning()">📚 Stapel lernen</button>
+
+        <h3 style="margin-top:25px; border-bottom: 1px solid #333; padding-bottom: 8px;">Inhalt</h3>
+        <div id="content-list"></div>
+    </div>
+
+    <!-- LERN-ANSICHT (ANKI STYLE) -->
+    <div id="view-learn" class="hidden">
+        <h2>Anki Lernmodus</h2>
+        
+        <div class="card" id="flashcard" onclick="showAnswer()">
+            <div class="card-label" id="card-label">Vorderseite</div>
+            <div id="card-front">Frage...</div>
+            <div class="answer-divider hidden" id="divider"></div>
+            <div id="card-back" class="hidden" style="color: #4da3ff;">Antwort...</div>
+        </div>
+
+        <button id="btn-show-answer" class="btn-learn" style="margin-top:0;" onclick="showAnswer()">Antwort anzeigen</button>
+
+        <!-- Anki Bewertungsleiste -->
+        <div id="anki-rating" class="hidden">
+            <div class="anki-btns">
+                <button class="btn-again" onclick="rateCard('again')">
+                    <span>❌ Nochmal</span>
+                    <small style="font-weight:normal; opacity:0.8;">Wiederholen</small>
+                </button>
+                <button class="btn-hard" onclick="rateCard('hard')">
+                    <span>⚠️ Mittel</span>
+                    <small style="font-weight:normal; opacity:0.8;">Später</small>
+                </button>
+                <button class="btn-good" onclick="rateCard('good')">
+                    <span>✅ Gut</span>
+                    <small style="font-weight:normal; opacity:0.8;">Gewusst</small>
+                </button>
+            </div>
+        </div>
+        
+        <button style="margin-top: 25px; background: transparent; color: #aaa; border: 1px solid #444; width: 100%;" onclick="exitLearning()">← Zurück zur Übersicht</button>
+    </div>
+</div>
+
+<script>
+    // Speicherung im Browser (LocalStorage)
+    let appData = JSON.parse(localStorage.getItem('ankiAppData')) || {
+        name: "Hauptübersicht",
+        folders: [],
+        cards: []
+    };
+
+    let path = []; 
+    let learnQueue = [];
+    let currentCard = null;
+
+    function saveData() {
+        localStorage.setItem('ankiAppData', JSON.stringify(appData));
+    }
+
+    function getCurrentFolder() {
+        let current = appData;
+        for (let idx of path) {
+            current = current.folders[idx];
+        }
+        return current;
+    }
+
+    function render() {
+        const folder = getCurrentFolder();
+        document.getElementById('current-title').innerText = folder.name;
+
+        // Breadcrumbs
+        let breadcrumbHTML = '<span onclick="navToPath([])">📁 Hauptübersicht</span>';
+        let tempPath = [];
+        let tempFolder = appData;
+        for (let idx of path) {
+            tempPath.push(idx);
+            tempFolder = tempFolder.folders[idx];
+            let pStr = JSON.stringify([...tempPath]);
+            breadcrumbHTML += ` / <span onclick='navToPath(${pStr})'>${tempFolder.name}</span>`;
+        }
+        document.getElementById('breadcrumb').innerHTML = breadcrumbHTML;
+
+        // Liste rendern
+        const listEl = document.getElementById('content-list');
+        listEl.innerHTML = '';
+
+        if(folder.folders.length === 0 && folder.cards.length === 0) {
+            listEl.innerHTML = '<p style="color:#666; text-align:center;">Dieser Ordner ist leer.</p>';
+        }
+
+        folder.folders.forEach((f, i) => {
+            listEl.innerHTML += `
+                <div class="list-item" onclick="openFolder(${i})">
+                    <span>📁 <strong>${f.name}</strong></span>
+                    <div>
+                        <span class="badge">${f.cards.length} Karten</span>
+                        <button class="btn-delete" onclick="event.stopPropagation(); deleteFolder(${i})">🗑️</button>
+                    </div>
+                </div>`;
+        });
+
+        folder.cards.forEach((c, i) => {
+            listEl.innerHTML += `
+                <div class="list-item" style="cursor:default;">
+                    <span>🗂️ <strong>${c.term}</strong> <small style="color:#aaa;">— ${c.def}</small></span>
+                    <button class="btn-delete" onclick="deleteCard(${i})">🗑️</button>
+                </div>`;
+        });
+
+        document.getElementById('btn-start-learn').disabled = (folder.cards.length === 0);
+    }
+
+    function addFolder() {
+        const input = document.getElementById('folder-input');
+        if (!input.value.trim()) return;
+        getCurrentFolder().folders.push({ name: input.value.trim(), folders: [], cards: [] });
+        input.value = '';
+        saveData(); render();
+    }
+
+    function addCard() {
+        const termInput = document.getElementById('term-input');
+        const defInput = document.getElementById('def-input');
+        if (!termInput.value.trim() || !defInput.value.trim()) return;
+        
+        getCurrentFolder().cards.push({ term: termInput.value.trim(), def: defInput.value.trim() });
+        termInput.value = ''; defInput.value = '';
+        saveData(); render();
+    }
+
+    function openFolder(index) { path.push(index); render(); }
+    function navToPath(newPath) { path = newPath; render(); }
+
+    function deleteFolder(index) {
+        if(confirm("Ordner und alle enthaltenen Karten löschen?")) {
+            getCurrentFolder().folders.splice(index, 1);
+            saveData(); render();
+        }
+    }
+
+    function deleteCard(index) {
+        getCurrentFolder().cards.splice(index, 1);
+        saveData(); render();
+    }
+
+    // --- ANKI LERN-LOGIK ---
+    function startLearning() {
+        const folder = getCurrentFolder();
+        if(folder.cards.length === 0) return;
+
+        // Kopie der Karten in die Lern-Warteschlange laden
+        learnQueue = [...folder.cards];
+        document.getElementById('view-manage').classList.add('hidden');
+        document.getElementById('view-learn').classList.remove('hidden');
+        nextAnkiCard();
+    }
+
+    function nextAnkiCard() {
+        if(learnQueue.length === 0) {
+            alert("🎉 Hervorragend! Du hast alle Karten für diesen Ordner gelernt!");
+            exitLearning();
+            return;
+        }
+
+        currentCard = learnQueue[0];
+        document.getElementById('card-front').innerText = currentCard.term;
+        document.getElementById('card-back').innerText = currentCard.def;
+
+        // Vorderseite anzeigen, Rückseite verstecken
+        document.getElementById('card-back').classList.add('hidden');
+        document.getElementById('divider').classList.add('hidden');
+        document.getElementById('btn-show-answer').classList.remove('hidden');
+        document.getElementById('anki-rating').classList.add('hidden');
+        document.getElementById('card-label').innerText = "Vorderseite (Klicken zum Umdrehen)";
+    }
+
+    function showAnswer() {
+        document.getElementById('card-back').classList.remove('hidden');
+        document.getElementById('divider').classList.remove('hidden');
+        document.getElementById('btn-show-answer').classList.add('hidden');
+        document.getElementById('anki-rating').classList.remove('hidden');
+        document.getElementById('card-label').innerText = "Vorderseite & Rückseite";
+    }
+
+    function rateCard(rating) {
+        let card = learnQueue.shift(); // Karte aus der Warteschlange nehmen
+
+        if(rating === 'again') {
+            // Karte wieder hinten anstellen
+            learnQueue.push(card);
+        } else if(rating === 'hard') {
+            // Karte in die Mitte einreihen
+            let pos = Math.ceil(learnQueue.length / 2);
+            learnQueue.splice(pos, 0, card);
+        } else if(rating === 'good') {
+            // Karte ist für diese Runde abgeschlossen!
+        }
+
+        nextAnkiCard();
+    }
+
+    function exitLearning() {
+        document.getElementById('view-learn').classList.add('hidden');
+        document.getElementById('view-manage').classList.remove('hidden');
+        render();
+    }
+
+    // Initialisierung
+    render();
+</script>
+
 </body>
 </html>
