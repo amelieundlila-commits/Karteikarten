@@ -73,6 +73,17 @@
         .question-text { font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 12px; }
         .answer-input { width: 100%; border: none; background: transparent; font-size: 18px; outline: none; color: #334155; line-height: 36px; font-weight: 500; }
 
+        /* Vergleich: Deine Antwort vs. richtige Antwort */
+        .answer-compare { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+        .answer-row { border-radius: 12px; padding: 10px 16px; line-height: 1.4; border: 2px solid transparent; }
+        .answer-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; opacity: 0.8; }
+        .answer-value { font-size: 20px; font-weight: 700; word-break: break-word; }
+        .answer-row.mine { background: #f1f5f9; color: #334155; border-color: #e2e8f0; }
+        .answer-row.mine.ok { background: var(--green-bg); color: #065f46; border-color: var(--green); }
+        .answer-row.mine.nok { background: var(--red-bg); color: #991b1b; border-color: var(--red); }
+        .answer-row.correct { background: var(--primary-light); color: var(--primary); border-color: #c7d2fe; }
+        .answer-value em { font-weight: 500; opacity: 0.7; font-size: 16px; }
+
         .rating-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px; }
         .btn-rate { padding: 16px; border: none; border-radius: 14px; font-weight: 800; font-size: 15px; cursor: pointer; text-align: center; }
         .btn-green { background: var(--green-bg); color: #065f46; }
@@ -131,7 +142,8 @@
     let appData = JSON.parse(localStorage.getItem('karteiFullData')) || { folders: [] };
     let view = { name: "home", currentFolderId: null };
     let setup = { filter: "all", questionCount: 1, availableCards: [] };
-    let quiz = { cards: [], index: 0, flipped: false };
+    // userAnswer: speichert die eingegebene Antwort der aktuellen Frage
+    let quiz = { cards: [], index: 0, flipped: false, userAnswer: "" };
 
     const dictionary = {
         "baum": "l'arbre", "haus": "la maison", "hund": "le chien", "katze": "le chat",
@@ -139,6 +151,14 @@
         "auto": "la voiture", "blume": "la fleur", "sonne": "le soleil", "mond": "la lune",
         "stuhl": "la chaise", "tisch": "la table", "milch": "le lait", "käse": "le fromage"
     };
+
+    function escapeHtml(str) {
+        return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
+
+    function normalizeAnswer(s) {
+        return String(s).trim().toLowerCase().replace(/\s+/g, " ");
+    }
 
     function checkTranslation(val) {
         let clean = val.toLowerCase().trim();
@@ -247,7 +267,7 @@
                     <h1 style="margin:0; font-size:30px; font-weight:800;">${f.name}</h1>
                     <div class="icon-box" onclick="toggleCardModal(true)">➕</div>
                 </div>
-                <div style="display:flex; gap:10px; margin: 16px 0;">
+                <div style="display:flex; gap:10px; margin: 16px 0; flex-wrap:wrap;">
                     <span style="background:var(--green-bg); color:#065f46; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px;">● Richtig ${richtig}</span>
                     <span style="background:var(--yellow-bg); color:#92400e; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px;">● Mittel ${mittel}</span>
                     <span style="background:var(--red-bg); color:#991b1b; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px;">● Falsch ${falsch}</span>
@@ -327,6 +347,28 @@
                 return;
             }
             let currentFolder = (appData.folders || []).find(f => f.id === view.currentFolderId);
+            let userAns = quiz.userAnswer || "";
+            let isMatch = userAns.trim() !== "" && normalizeAnswer(userAns) === normalizeAnswer(getCardDef(card));
+            let mineClass = userAns.trim() === "" ? "" : (isMatch ? "ok" : "nok");
+
+            let bodyHtml;
+            if (quiz.flipped) {
+                bodyHtml = `
+                    <div class="answer-compare">
+                        <div class="answer-row mine ${mineClass}">
+                            <div class="answer-label">Deine Antwort ${userAns.trim() === "" ? "" : (isMatch ? "✓" : "✗")}</div>
+                            <div class="answer-value">${userAns.trim() === "" ? "<em>– nichts eingegeben –</em>" : escapeHtml(userAns)}</div>
+                        </div>
+                        <div class="answer-row correct">
+                            <div class="answer-label">Richtige Antwort</div>
+                            <div class="answer-value">${escapeHtml(getCardDef(card))}</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                bodyHtml = `<input type="text" id="quiz-answer" class="answer-input" placeholder="Schreibe deine Antwort ..." value="${escapeHtml(userAns)}" autocomplete="off" oninput="quiz.userAnswer = this.value" onkeydown="if(event.key==='Enter'){flipQuizCard();}">`;
+            }
+
             app.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
                     <a class="back-link" onclick="openFolder('${view.currentFolderId}')" style="margin:0;">‹ Pausieren</a>
@@ -336,16 +378,21 @@
                     <div class="paper-header"><span>Frage</span><span>${currentFolder ? currentFolder.name : ''}</span></div>
                     <div class="paper-body">
                         <div class="question-text">${getCardTerm(card)}</div>
-                        ${quiz.flipped ? `<div style="color:var(--primary); font-size:20px; font-weight:700; margin-top:10px;">${getCardDef(card)}</div>` : `<input type="text" class="answer-input" placeholder="Schreibe deine Antwort ..." autofocus>`}
+                        ${bodyHtml}
                     </div>
                 </div>
-                <button class="btn-primary" style="margin-bottom:16px;" onclick="flipQuizCard()">${quiz.flipped ? 'Antwort verbergen' : 'Umdrehen'}</button>
+                <button class="btn-primary" style="margin-bottom:16px;" onclick="flipQuizCard()">${quiz.flipped ? 'Zurück zur Eingabe' : 'Umdrehen'}</button>
                 <div class="rating-grid">
                     <button class="btn-rate btn-green" ${!quiz.flipped?'disabled':''} onclick="rateQuizCard('richtig')">Richtig</button>
                     <button class="btn-rate btn-yellow" ${!quiz.flipped?'disabled':''} onclick="rateQuizCard('mittel')">Mittel</button>
                     <button class="btn-rate btn-red" ${!quiz.flipped?'disabled':''} onclick="rateQuizCard('falsch')">Falsch</button>
                 </div>
             `;
+
+            if (!quiz.flipped) {
+                let inp = document.getElementById('quiz-answer');
+                if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
+            }
         }
     }
 
@@ -365,9 +412,24 @@
     function setFilter(f) { setup.filter = f; render(); }
     function updateCount(val) { setup.questionCount = parseInt(val); document.getElementById('count-display').innerText = val; }
     function setMaxCount() { setup.questionCount = setup.availableCards.length; render(); }
-    function startQuiz() { quiz.cards = setup.availableCards.slice(0, setup.questionCount); quiz.index = 0; quiz.flipped = false; view.name = "quiz"; render(); }
-    function flipQuizCard() { quiz.flipped = !quiz.flipped; render(); }
-    function rateQuizCard(status) { let card = quiz.cards[quiz.index]; card.s = status; card.status = status; quiz.index++; quiz.flipped = false; saveData(); }
+    function startQuiz() { quiz.cards = setup.availableCards.slice(0, setup.questionCount); quiz.index = 0; quiz.flipped = false; quiz.userAnswer = ""; view.name = "quiz"; render(); }
+
+    function flipQuizCard() {
+        // Eingabe sichern, bevor neu gerendert wird
+        let inp = document.getElementById('quiz-answer');
+        if (inp) quiz.userAnswer = inp.value;
+        quiz.flipped = !quiz.flipped;
+        render();
+    }
+
+    function rateQuizCard(status) {
+        let card = quiz.cards[quiz.index];
+        card.s = status; card.status = status;
+        quiz.index++;
+        quiz.flipped = false;
+        quiz.userAnswer = "";
+        saveData();
+    }
 
     function toggleBackup(s) { document.getElementById('backup-modal').classList.toggle('hidden', !s); if(s) document.getElementById('backup-text').value = JSON.stringify(appData); }
     function copyBackup() { let t = document.getElementById('backup-text'); t.select(); navigator.clipboard.writeText(t.value); alert("Kopiert!"); }
