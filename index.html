@@ -84,6 +84,12 @@
         .answer-row.correct { background: var(--primary-light); color: var(--primary); border-color: #c7d2fe; }
         .answer-value em { font-weight: 500; opacity: 0.7; font-size: 16px; }
 
+        /* Lernrichtung-Umschalter */
+        .dir-toggle { display: flex; background: #e2e8f0; border-radius: 14px; padding: 4px; gap: 4px; margin: 14px 0; }
+        .dir-btn { flex: 1; text-align: center; padding: 10px 8px; border-radius: 11px; font-weight: 700; font-size: 13px; cursor: pointer; color: var(--text-muted); transition: all 0.2s; line-height: 1.3; }
+        .dir-btn small { display: block; font-weight: 600; font-size: 11px; opacity: 0.75; }
+        .dir-btn.active { background: var(--card-bg); color: var(--primary); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
         .rating-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px; }
         .btn-rate { padding: 16px; border: none; border-radius: 14px; font-weight: 800; font-size: 15px; cursor: pointer; text-align: center; }
         .btn-green { background: var(--green-bg); color: #065f46; }
@@ -144,6 +150,9 @@
     let setup = { filter: "all", questionCount: 1, availableCards: [] };
     // userAnswer: speichert die eingegebene Antwort der aktuellen Frage
     let quiz = { cards: [], index: 0, flipped: false, userAnswer: "" };
+    // Lernrichtung: 'fwd' = Begriff → Übersetzung, 'rev' = Übersetzung → Begriff
+    let direction = 'fwd';
+    try { direction = localStorage.getItem('karteiDirection') === 'rev' ? 'rev' : 'fwd'; } catch(e) {}
 
     const dictionary = {
         "baum": "l'arbre", "haus": "la maison", "hund": "le chien", "katze": "le chat",
@@ -181,7 +190,33 @@
 
     function getCardTerm(c) { return c.q !== undefined ? c.q : (c.term !== undefined ? c.term : ""); }
     function getCardDef(c) { return c.a !== undefined ? c.a : (c.def !== undefined ? c.def : ""); }
-    function getCardStatus(c) { return c.s !== undefined ? c.s : (c.status !== undefined ? c.status : "offen"); }
+    // Status wird getrennt pro Lernrichtung gespeichert:
+    // fwd -> c.s (bzw. altes c.status), rev -> c.sr
+    function getCardStatus(c) {
+        if (direction === 'rev') return c.sr !== undefined ? c.sr : "offen";
+        return c.s !== undefined ? c.s : (c.status !== undefined ? c.status : "offen");
+    }
+    function setCardStatus(c, status) {
+        if (direction === 'rev') { c.sr = status; }
+        else { c.s = status; c.status = status; }
+    }
+    // Was wird gefragt / was ist die richtige Antwort – je nach Richtung
+    function getPrompt(c) { return direction === 'rev' ? getCardDef(c) : getCardTerm(c); }
+    function getAnswer(c) { return direction === 'rev' ? getCardTerm(c) : getCardDef(c); }
+
+    function directionToggleHtml() {
+        return `
+            <div class="dir-toggle">
+                <div class="dir-btn ${direction==='fwd'?'active':''}" onclick="setDirection('fwd')">Begriff → Übersetzung<small>z. B. Deutsch → Englisch</small></div>
+                <div class="dir-btn ${direction==='rev'?'active':''}" onclick="setDirection('rev')">Übersetzung → Begriff<small>z. B. Englisch → Deutsch</small></div>
+            </div>
+        `;
+    }
+    function setDirection(d) {
+        direction = d;
+        try { localStorage.setItem('karteiDirection', d); } catch(e) {}
+        render();
+    }
 
     function saveData() {
         localStorage.setItem('karteiFullData', JSON.stringify(appData));
@@ -267,6 +302,7 @@
                     <h1 style="margin:0; font-size:30px; font-weight:800;">${f.name}</h1>
                     <div class="icon-box" onclick="toggleCardModal(true)">➕</div>
                 </div>
+                ${directionToggleHtml()}
                 <div style="display:flex; gap:10px; margin: 16px 0; flex-wrap:wrap;">
                     <span style="background:var(--green-bg); color:#065f46; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px;">● Richtig ${richtig}</span>
                     <span style="background:var(--yellow-bg); color:#92400e; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px;">● Mittel ${mittel}</span>
@@ -323,6 +359,8 @@
                 <a class="back-link" onclick="openFolder('${view.currentFolderId}')">‹ Ordner</a>
                 <h1 style="margin:0; font-size:28px; font-weight:800;">Prüfung starten</h1>
                 <p style="color:var(--text-muted); margin-top:2px; font-weight:600;">${f.name}</p>
+                <div class="section-title">Lernrichtung</div>
+                ${directionToggleHtml()}
                 <div class="section-title">Welche Karten?</div>
                 <div class="grid-2">
                     <div class="option-box ${setup.filter==='all'?'active':''}" onclick="setFilter('all')"><span>Alle Karten</span> <span class="count-badge">${getAllCardsRecursive(f.id).length}</span></div>
@@ -348,7 +386,7 @@
             }
             let currentFolder = (appData.folders || []).find(f => f.id === view.currentFolderId);
             let userAns = quiz.userAnswer || "";
-            let isMatch = userAns.trim() !== "" && normalizeAnswer(userAns) === normalizeAnswer(getCardDef(card));
+            let isMatch = userAns.trim() !== "" && normalizeAnswer(userAns) === normalizeAnswer(getAnswer(card));
             let mineClass = userAns.trim() === "" ? "" : (isMatch ? "ok" : "nok");
 
             let bodyHtml;
@@ -361,7 +399,7 @@
                         </div>
                         <div class="answer-row correct">
                             <div class="answer-label">Richtige Antwort</div>
-                            <div class="answer-value">${escapeHtml(getCardDef(card))}</div>
+                            <div class="answer-value">${escapeHtml(getAnswer(card))}</div>
                         </div>
                     </div>
                 `;
@@ -375,9 +413,9 @@
                     <span style="font-weight:700; color:var(--text-muted); font-size:14px;">Frage ${quiz.index + 1} von ${quiz.cards.length}</span>
                 </div>
                 <div class="paper-card">
-                    <div class="paper-header"><span>Frage</span><span>${currentFolder ? currentFolder.name : ''}</span></div>
+                    <div class="paper-header"><span>Frage · ${direction === 'rev' ? 'Übersetzung → Begriff' : 'Begriff → Übersetzung'}</span><span>${currentFolder ? currentFolder.name : ''}</span></div>
                     <div class="paper-body">
-                        <div class="question-text">${getCardTerm(card)}</div>
+                        <div class="question-text">${escapeHtml(getPrompt(card))}</div>
                         ${bodyHtml}
                     </div>
                 </div>
@@ -424,7 +462,7 @@
 
     function rateQuizCard(status) {
         let card = quiz.cards[quiz.index];
-        card.s = status; card.status = status;
+        setCardStatus(card, status);
         quiz.index++;
         quiz.flipped = false;
         quiz.userAnswer = "";
