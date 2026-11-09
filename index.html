@@ -140,7 +140,7 @@
 <!-- Modal für Karten (Mit Dauermodus & Übersetzer) -->
 <div id="card-modal" class="modal hidden">
     <div class="modal-content">
-        <h3 style="margin-top:0; font-size:20px;">Neue Karteikarte</h3>
+        <h3 style="margin-top:0; font-size:20px;" id="card-modal-title">Neue Karteikarte</h3>
         <input type="text" id="new-card-term" placeholder="Begriff / Frage (z.B. Baum)" oninput="checkDuplicate()">
 
         <!-- Warnung: Vokabel schon vorhanden -->
@@ -163,15 +163,17 @@
             <div><span class="img-remove" onclick="clearImage()">✕ Bild entfernen</span></div>
         </div>
         
-        <button class="btn-primary" onclick="createCard(false)">OK & Nächste Karte</button>
-        <button class="btn-secondary" onclick="createCard(true)">Fertig / Schließen</button>
+        <button class="btn-primary" id="card-next-btn" onclick="createCard(false)">OK & Nächste Karte</button>
+        <button class="btn-secondary" id="card-done-btn" onclick="createCard(true)">Fertig / Schließen</button>
+        <button class="btn-secondary hidden" id="card-cancel-btn" onclick="toggleCardModal(false)">Abbrechen</button>
     </div>
 </div>
 
 <script>
     let appData = JSON.parse(localStorage.getItem('karteiFullData')) || { folders: [] };
     let view = { name: "home", currentFolderId: null };
-    let setup = { filter: "all", questionCount: 1, availableCards: [] };
+    let setup = { filter: "all", questionCount: 1, availableCards: [], shuffle: false };
+    try { setup.shuffle = localStorage.getItem('karteiShuffle') === '1'; } catch(e) {}
     // userAnswer: speichert die eingegebene Antwort der aktuellen Frage
     let quiz = { cards: [], index: 0, flipped: false, userAnswer: "" };
     // Lernrichtung: 'fwd' = Begriff → Übersetzung, 'rev' = Übersetzung → Begriff
@@ -252,6 +254,7 @@
         let matches = [];
         (appData.folders || []).forEach(f => {
             (f.cards || []).forEach(c => {
+                if (c === editingCard) return;
                 const t = normalizeAnswer(getCardTerm(c));
                 const d = normalizeAnswer(getCardDef(c));
                 const hit = (termVal && (t === termVal || d === termVal)) || (defVal && (t === defVal || d === defVal));
@@ -271,6 +274,33 @@
 
     // ---------- Bilder ----------
     let pendingImage = null;
+    let editingCard = null; // Karte, die gerade bearbeitet wird (null = neue Karte)
+
+    function updateCardModalMode() {
+        const editing = !!editingCard;
+        document.getElementById('card-modal-title').innerText = editing ? 'Karte bearbeiten' : 'Neue Karteikarte';
+        document.getElementById('card-next-btn').innerText = editing ? 'Speichern' : 'OK & Nächste Karte';
+        document.getElementById('card-done-btn').classList.toggle('hidden', editing);
+        document.getElementById('card-cancel-btn').classList.toggle('hidden', !editing);
+    }
+
+    function editCard(cIdx) {
+        let folder = (appData.folders || []).find(f => f.id === view.currentFolderId);
+        if (!folder || !folder.cards || !folder.cards[cIdx]) return;
+        editingCard = folder.cards[cIdx];
+        toggleCardModal(true);
+    }
+
+    function saveEditedCard() {
+        const term = document.getElementById('new-card-term').value.trim();
+        const def = document.getElementById('new-card-def').value.trim();
+        if (!term || !def) { alert("Bitte Begriff und Übersetzung ausfüllen."); return; }
+        editingCard.q = term;
+        editingCard.a = def;
+        if (pendingImage) editingCard.img = pendingImage; else delete editingCard.img;
+        saveData();
+        toggleCardModal(false);
+    }
 
     function handleImage(input) {
         const file = input.files && input.files[0];
@@ -451,6 +481,7 @@
                         </div>
                         <div style="display:flex; align-items:center; gap:12px;">
                             ${c.img ? `<img class="thumb" src="${c.img}" alt="">` : ''}
+                            <span style="color:#94a3b8; cursor:pointer;" onclick="editCard(${cIdx})">✏️</span>
                             <span style="color:#94a3b8; cursor:pointer;" onclick="deleteCard(${cIdx})">🗑️</span>
                         </div>
                     </div>
@@ -473,6 +504,11 @@
                     <div class="option-box ${setup.filter==='mittel_falsch'?'active':''}" onclick="setFilter('mittel_falsch')"><span>Mittel und falsch</span> <span class="count-badge">${getAllCardsRecursive(f.id).filter(c=>getCardStatus(c)==='mittel'||getCardStatus(c)==='falsch').length}</span></div>
                     <div class="option-box ${setup.filter==='falsch'?'active':''}" onclick="setFilter('falsch')"><span>Nur falsch</span> <span class="count-badge">${getAllCardsRecursive(f.id).filter(c=>getCardStatus(c)==='falsch').length}</span></div>
                     <div class="option-box ${setup.filter==='offen'?'active':''}" onclick="setFilter('offen')"><span>Noch nicht geprüft</span> <span class="count-badge">${getAllCardsRecursive(f.id).filter(c=>getCardStatus(c)==='offen'||!getCardStatus(c)).length}</span></div>
+                </div>
+                <div class="section-title">Reihenfolge</div>
+                <div class="dir-toggle">
+                    <div class="dir-btn ${setup.shuffle?'active':''}" onclick="setShuffle(true)">🔀 Gemischt</div>
+                    <div class="dir-btn ${!setup.shuffle?'active':''}" onclick="setShuffle(false)">➡️ Der Reihe nach</div>
                 </div>
                 <div class="section-title">Wie viele Fragen?</div>
                 <div class="slider-box">
@@ -554,10 +590,22 @@
         setup.questionCount = Math.min(Math.max(1, setup.questionCount), setup.availableCards.length || 1);
     }
 
+    function setShuffle(v) {
+        setup.shuffle = v;
+        try { localStorage.setItem('karteiShuffle', v ? '1' : '0'); } catch(e) {}
+        render();
+    }
     function setFilter(f) { setup.filter = f; render(); }
     function updateCount(val) { setup.questionCount = parseInt(val); document.getElementById('count-display').innerText = val; }
     function setMaxCount() { setup.questionCount = setup.availableCards.length; render(); }
-    function startQuiz() { quiz.cards = setup.availableCards.slice(0, setup.questionCount); quiz.index = 0; quiz.flipped = false; quiz.userAnswer = ""; view.name = "quiz"; render(); }
+    function startQuiz() { let pool = [...setup.availableCards];
+        if (setup.shuffle) {
+            for (let i = pool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+            }
+        }
+        quiz.cards = pool.slice(0, setup.questionCount); quiz.index = 0; quiz.flipped = false; quiz.userAnswer = ""; view.name = "quiz"; render(); }
 
     function flipQuizCard() {
         // Eingabe sichern, bevor neu gerendert wird
@@ -607,17 +655,25 @@
 
     function toggleCardModal(s) { 
         document.getElementById('card-modal').classList.toggle('hidden', !s);
+        if (!s) editingCard = null;
         if(s) {
             document.getElementById('new-card-term').value = '';
             document.getElementById('new-card-def').value = '';
             document.getElementById('translation-suggestion').classList.add('hidden');
             clearImage();
+            if (editingCard) {
+                document.getElementById('new-card-term').value = getCardTerm(editingCard);
+                document.getElementById('new-card-def').value = getCardDef(editingCard);
+                if (editingCard.img) { pendingImage = editingCard.img; showImagePreview(); }
+            }
+            updateCardModalMode();
             checkDuplicate();
             document.getElementById('new-card-term').focus();
         }
     }
     
     function createCard(closeModal) {
+        if (editingCard) { saveEditedCard(); return; }
         let term = document.getElementById('new-card-term').value.trim();
         let def = document.getElementById('new-card-def').value.trim();
         if(term && def && view.currentFolderId) { 
