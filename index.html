@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-theme="auto">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,120 +14,232 @@
             --primary: #4f46e5;
             --primary-hover: #4338ca;
             --primary-light: #eef2ff;
+            --primary-text: #4f46e5;
             --text-main: #1e293b;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
             --green: #10b981;
             --green-bg: #d1fae5;
+            --green-text: #065f46;
             --yellow: #f59e0b;
             --yellow-bg: #fef3c7;
+            --yellow-text: #92400e;
             --red: #ef4444;
             --red-bg: #fee2e2;
+            --red-text: #991b1b;
+            --surface2: #f1f5f9;
+            --surface3: #e2e8f0;
+            --paper-line: #f1f5f9;
+            --paper-head-bg: #f0f9ff;
+            --paper-head-text: #0284c7;
+            --paper-head-border: #bae6fd;
+            --logo: #312e81;
+            --hover-light: #e0e7ff;
+        }
+        :root[data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-light: #28325e;
+            --primary-text: #a5b4fc;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --green-bg: #064e3b;
+            --green-text: #6ee7b7;
+            --yellow-bg: #78350f;
+            --yellow-text: #fcd34d;
+            --red-bg: #7f1d1d;
+            --red-text: #fca5a5;
+            --surface2: #334155;
+            --surface3: #0f172a;
+            --paper-line: #2a3649;
+            --paper-head-bg: #0c4a6e;
+            --paper-head-text: #7dd3fc;
+            --paper-head-border: #075985;
+            --logo: #c7d2fe;
+            --hover-light: #33407a;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root[data-theme="auto"] {
+                --bg-color: #0f172a;
+                --card-bg: #1e293b;
+                --primary: #6366f1;
+                --primary-hover: #4f46e5;
+                --primary-light: #28325e;
+                --primary-text: #a5b4fc;
+                --text-main: #e2e8f0;
+                --text-muted: #94a3b8;
+                --border-color: #334155;
+                --green-bg: #064e3b;
+                --green-text: #6ee7b7;
+                --yellow-bg: #78350f;
+                --yellow-text: #fcd34d;
+                --red-bg: #7f1d1d;
+                --red-text: #fca5a5;
+                --surface2: #334155;
+                --surface3: #0f172a;
+                --paper-line: #2a3649;
+                --paper-head-bg: #0c4a6e;
+                --paper-head-text: #7dd3fc;
+                --paper-head-border: #075985;
+                --logo: #c7d2fe;
+                --hover-light: #33407a;
+            }
         }
 
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; }
-        body { background: var(--bg-color); color: var(--text-main); margin: 0; padding: 24px 16px; display: flex; justify-content: center; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg-color); color: var(--text-main); margin: 0; padding: 24px 16px 60px; display: flex; justify-content: center; -webkit-font-smoothing: antialiased; }
         .container { max-width: 680px; width: 100%; }
-        
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .logo { display: flex; align-items: center; gap: 10px; font-size: 26px; font-weight: 800; color: #312e81; cursor: pointer; letter-spacing: -0.5px; }
+
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 26px; font-weight: 800; color: var(--logo); cursor: pointer; letter-spacing: -0.5px; }
         .icon-box { background: var(--card-bg); padding: 10px 14px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer; color: var(--text-muted); font-weight: 700; border: 1px solid var(--border-color); transition: all 0.2s; }
-        .icon-box:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
-        .back-link { color: var(--primary); cursor: pointer; font-weight: 700; text-decoration: none; margin-bottom: 12px; display: inline-flex; align-items: center; gap: 4px; font-size: 14px; }
+        .icon-box:hover { border-color: var(--primary); color: var(--primary-text); transform: translateY(-1px); }
+        .back-link { color: var(--primary-text); cursor: pointer; font-weight: 700; text-decoration: none; margin-bottom: 12px; display: inline-flex; align-items: center; gap: 4px; font-size: 14px; }
 
-        .banner { background: var(--card-bg); border: 1px solid var(--border-color); padding: 18px 22px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
-        .card-item { background: var(--card-bg); border-radius: 16px; padding: 18px 22px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid var(--border-color); transition: all 0.2s ease; }
-        .card-item:hover { border-color: #c7d2fe; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(79, 70, 229, 0.08); }
-        
+        .banner { background: var(--card-bg); border: 1px solid var(--border-color); padding: 16px 20px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .banner.warn { background: var(--yellow-bg); color: var(--yellow-text); border-color: var(--yellow); cursor: pointer; font-weight: 700; font-size: 14px; }
+        .card-item { background: var(--card-bg); border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; gap: 12px; cursor: pointer; border: 1px solid var(--border-color); transition: all 0.2s ease; }
+        .card-item:hover { border-color: #818cf8; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(79, 70, 229, 0.08); }
+        .actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+        .act { color: #94a3b8; cursor: pointer; font-size: 16px; }
+        .act:hover { color: var(--primary-text); }
+
         .badge-letter { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #1e1b4b; font-size: 18px; margin-right: 16px; flex-shrink: 0; }
-        
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: var(--card-bg); padding: 28px; border-radius: 20px; width: 90%; max-width: 480px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border: 1px solid var(--border-color); }
-        .modal-content textarea { width: 100%; height: 120px; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 12px; margin-top: 8px; outline: none; font-family: monospace; }
-        .modal-content input { width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 14px; font-size: 14px; outline: none; }
-        .modal-content input:focus { border-color: var(--primary); }
 
-        .suggestion-box { background: var(--primary-light); border: 1px dashed var(--primary); padding: 8px 12px; border-radius: 8px; margin-bottom: 14px; font-size: 13px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .suggestion-box:hover { background: #e0e7ff; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: var(--card-bg); padding: 28px; border-radius: 20px; width: 90%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border: 1px solid var(--border-color); }
+        .modal-content textarea { width: 100%; height: 120px; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 12px; margin-top: 8px; outline: none; font-family: monospace; background: var(--card-bg); color: var(--text-main); }
+        .modal-content input[type="text"], .modal-content input[type="number"], .modal-content select { width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 14px; font-size: 14px; outline: none; background: var(--card-bg); color: var(--text-main); }
+        .modal-content input:focus, .modal-content select:focus { border-color: var(--primary); }
+        .field-label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
 
-        .btn-primary { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; text-align: center; font-size: 15px; transition: all 0.2s; width: 100%; }
-        .btn-primary:hover { background: var(--primary-hover); }
-        .btn-secondary { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 8px; transition: all 0.2s; }
-        .btn-secondary:hover { background: #f8fafc; }
-        .hidden { display: none !important; }
+        .suggestion-box { background: var(--primary-light); border: 1px dashed var(--primary); padding: 8px 12px; border-radius: 8px; margin-bottom: 14px; font-size: 13px; color: var(--primary-text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .suggestion-box:hover { background: var(--hover-light); }
 
-        .section-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin: 24px 0 12px 0; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .option-box { background: var(--card-bg); border: 2px solid var(--border-color); padding: 16px 18px; border-radius: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 14px; transition: all 0.2s; }
-        .option-box.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
-        .count-badge { background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 12px; color: var(--text-muted); font-weight: 700; }
-        
-        .slider-box { background: var(--card-bg); border-radius: 18px; padding: 28px; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
-        .big-number { font-size: 42px; font-weight: 800; color: var(--text-main); margin: 0; letter-spacing: -1px; }
-        .sub-text { color: var(--text-muted); font-size: 13px; margin-bottom: 16px; font-weight: 600; }
-        input[type="range"] { width: 100%; margin: 16px 0; accent-color: var(--primary); }
-
-        .paper-card { background: #ffffff; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 20px; }
-        .paper-header { background: #f0f9ff; padding: 12px 24px; font-size: 13px; font-weight: 700; color: #0284c7; display: flex; justify-content: space-between; border-bottom: 2px solid #bae6fd; }
-        .paper-body { padding: 28px; background-image: repeating-linear-gradient(#ffffff, #ffffff 35px, #f1f5f9 36px); line-height: 36px; min-height: 200px; }
-        .question-text { font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 12px; }
-        .answer-input { width: 100%; border: none; background: transparent; font-size: 18px; outline: none; color: #334155; line-height: 36px; font-weight: 500; }
-
-        /* Vergleich: Deine Antwort vs. richtige Antwort */
-        .answer-compare { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
-        .answer-row { border-radius: 12px; padding: 10px 16px; line-height: 1.4; border: 2px solid transparent; }
-        .answer-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; opacity: 0.8; }
-        .answer-value { font-size: 20px; font-weight: 700; word-break: break-word; }
-        .answer-row.mine { background: #f1f5f9; color: #334155; border-color: #e2e8f0; }
-        .answer-row.mine.ok { background: var(--green-bg); color: #065f46; border-color: var(--green); }
-        .answer-row.mine.nok { background: var(--red-bg); color: #991b1b; border-color: var(--red); }
-        .answer-row.correct { background: var(--primary-light); color: var(--primary); border-color: #c7d2fe; }
-        .answer-value em { font-weight: 500; opacity: 0.7; font-size: 16px; }
-
-        /* Duplikat-Warnung & Bilder */
-        .modal-content { max-height: 90vh; overflow-y: auto; }
-        .dup-box { background: var(--yellow-bg); border: 1px solid var(--yellow); color: #92400e; padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-size: 13px; font-weight: 600; line-height: 1.4; }
+        .dup-box { background: var(--yellow-bg); border: 1px solid var(--yellow); color: var(--yellow-text); padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-size: 13px; font-weight: 600; line-height: 1.4; }
         .dup-box div + div { margin-top: 4px; }
-        .img-upload { display: block; text-align: center; background: var(--primary-light); border: 1px dashed var(--primary); color: var(--primary); padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-size: 14px; font-weight: 700; cursor: pointer; }
-        .img-upload:hover { background: #e0e7ff; }
+        .img-upload { display: block; text-align: center; background: var(--primary-light); border: 1px dashed var(--primary); color: var(--primary-text); padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-size: 14px; font-weight: 700; cursor: pointer; }
+        .img-upload:hover { background: var(--hover-light); }
         .img-preview { position: relative; margin-bottom: 14px; text-align: center; }
         .img-preview img { max-width: 100%; max-height: 160px; border-radius: 10px; border: 1px solid var(--border-color); }
         .img-preview .img-remove { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 700; color: var(--red); cursor: pointer; }
         .thumb { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color); }
         .card-img { display: block; max-width: 100%; max-height: 220px; margin: 14px auto 0; border-radius: 12px; border: 1px solid var(--border-color); }
 
-        /* Lernrichtung-Umschalter */
-        .dir-toggle { display: flex; background: #e2e8f0; border-radius: 14px; padding: 4px; gap: 4px; margin: 14px 0; }
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; text-align: center; font-size: 15px; transition: all 0.2s; width: 100%; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-secondary { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 8px; transition: all 0.2s; }
+        .btn-secondary:hover { background: var(--surface2); }
+        .btn-small { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 13px; }
+        .btn-small:disabled { opacity: 0.4; cursor: not-allowed; }
+        .hidden { display: none !important; }
+
+        .section-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin: 24px 0 12px 0; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .option-box { background: var(--card-bg); border: 2px solid var(--border-color); padding: 16px 18px; border-radius: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; transition: all 0.2s; }
+        .option-box.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary-text); }
+        .count-badge { background: var(--surface2); padding: 4px 10px; border-radius: 20px; font-size: 12px; color: var(--text-muted); font-weight: 700; }
+
+        .slider-box { background: var(--card-bg); border-radius: 18px; padding: 28px; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .big-number { font-size: 42px; font-weight: 800; color: var(--text-main); margin: 0; letter-spacing: -1px; }
+        .sub-text { color: var(--text-muted); font-size: 13px; margin-bottom: 16px; font-weight: 600; }
+        input[type="range"] { width: 100%; margin: 16px 0; accent-color: var(--primary); }
+
+        .paper-card { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 20px; }
+        .paper-header { background: var(--paper-head-bg); padding: 12px 24px; font-size: 13px; font-weight: 700; color: var(--paper-head-text); display: flex; justify-content: space-between; gap: 12px; border-bottom: 2px solid var(--paper-head-border); }
+        .paper-body { padding: 28px; background-image: repeating-linear-gradient(var(--card-bg), var(--card-bg) 35px, var(--paper-line) 36px); line-height: 36px; min-height: 200px; }
+        .question-text { font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; line-height: 1.3; }
+        .answer-input { width: 100%; border: none; background: transparent; font-size: 18px; outline: none; color: var(--text-main); line-height: 36px; font-weight: 500; }
+        .speak { cursor: pointer; font-size: 18px; margin-left: 8px; opacity: 0.7; vertical-align: middle; }
+        .speak:hover { opacity: 1; }
+
+        .answer-compare { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+        .answer-row { border-radius: 12px; padding: 10px 16px; line-height: 1.4; border: 2px solid transparent; }
+        .answer-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; opacity: 0.85; }
+        .answer-value { font-size: 20px; font-weight: 700; word-break: break-word; }
+        .answer-row.mine { background: var(--surface2); color: var(--text-main); border-color: var(--border-color); }
+        .answer-row.mine.ok { background: var(--green-bg); color: var(--green-text); border-color: var(--green); }
+        .answer-row.mine.close { background: var(--yellow-bg); color: var(--yellow-text); border-color: var(--yellow); }
+        .answer-row.mine.nok { background: var(--red-bg); color: var(--red-text); border-color: var(--red); }
+        .answer-row.correct { background: var(--primary-light); color: var(--primary-text); border-color: var(--primary); }
+        .answer-row.note { background: transparent; color: var(--text-muted); border: 1px dashed var(--border-color); }
+        .answer-row.note .answer-value { font-size: 15px; font-weight: 500; font-style: italic; }
+        .answer-value em { font-weight: 500; opacity: 0.7; font-size: 16px; }
+
+        .star-btn { cursor: pointer; font-size: 26px; line-height: 1; color: var(--text-muted); user-select: none; }
+        .star-btn.on { color: var(--yellow); }
+        .star-mini { cursor: pointer; font-size: 20px; line-height: 1; color: #94a3b8; user-select: none; }
+        .star-mini.on { color: var(--yellow); }
+
+        .dir-toggle { display: flex; background: var(--surface3); border-radius: 14px; padding: 4px; gap: 4px; margin: 14px 0; }
         .dir-btn { flex: 1; text-align: center; padding: 10px 8px; border-radius: 11px; font-weight: 700; font-size: 13px; cursor: pointer; color: var(--text-muted); transition: all 0.2s; line-height: 1.3; }
         .dir-btn small { display: block; font-weight: 600; font-size: 11px; opacity: 0.75; }
-        .dir-btn.active { background: var(--card-bg); color: var(--primary); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        .dir-btn.active { background: var(--card-bg); color: var(--primary-text); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
 
         .rating-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px; }
-        .btn-rate { padding: 16px; border: none; border-radius: 14px; font-weight: 800; font-size: 15px; cursor: pointer; text-align: center; }
-        .btn-green { background: var(--green-bg); color: #065f46; }
-        .btn-yellow { background: var(--yellow-bg); color: #92400e; }
-        .btn-red { background: var(--red-bg); color: #991b1b; }
+        .btn-rate { padding: 16px; border: 3px solid transparent; border-radius: 14px; font-weight: 800; font-size: 15px; cursor: pointer; text-align: center; }
+        .btn-green { background: var(--green-bg); color: var(--green-text); }
+        .btn-yellow { background: var(--yellow-bg); color: var(--yellow-text); }
+        .btn-red { background: var(--red-bg); color: var(--red-text); }
+        .btn-rate.suggest { border-color: currentColor; }
         .btn-rate:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        .chips { display: flex; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
+        .chip { padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 12px; background: var(--surface2); color: var(--text-muted); }
+        .chip.green { background: var(--green-bg); color: var(--green-text); }
+        .chip.yellow { background: var(--yellow-bg); color: var(--yellow-text); }
+        .chip.red { background: var(--red-bg); color: var(--red-text); }
+        .chip.blue { background: var(--primary-light); color: var(--primary-text); }
+
+        .summary { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px 20px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .sum-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-weight: 700; font-size: 14px; }
+        .progress { height: 10px; background: var(--surface2); border-radius: 10px; overflow: hidden; margin: 12px 0; }
+        .progress-bar { height: 100%; background: var(--primary); border-radius: 10px; transition: width 0.3s; }
+        .progress-bar.done { background: var(--green); }
+
+        .search-input { width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 16px; font-size: 14px; outline: none; background: var(--card-bg); color: var(--text-main); }
+        .search-input:focus { border-color: var(--primary); }
+
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 8px; }
+        .stat-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; text-align: center; }
+        .stat-num { font-size: 26px; font-weight: 800; }
+        .stat-lbl { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; }
+        .chart { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px 12px 10px; display: flex; align-items: flex-end; gap: 4px; height: 160px; }
+        .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; min-width: 0; }
+        .bar { width: 100%; max-width: 28px; background: var(--primary); opacity: 0.55; border-radius: 6px 6px 2px 2px; min-height: 3px; }
+        .bar.hl { opacity: 1; }
+        .bar-val { font-size: 10px; font-weight: 700; color: var(--text-muted); height: 14px; }
+        .bar-lbl { font-size: 10px; font-weight: 700; color: var(--text-muted); margin-top: 4px; }
+        .muted-small { font-size: 12px; color: var(--text-muted); font-weight: 600; }
     </style>
 </head>
 <body>
 
 <div class="container" id="app"></div>
 
-<!-- Modal für Backup -->
+<!-- Modal: Sicherung -->
 <div id="backup-modal" class="modal hidden">
     <div class="modal-content">
         <h3 style="margin-top:0; font-size:20px;">Sicherung & Übertragung</h3>
-        <textarea id="backup-text" readonly></textarea>
-        <button class="btn-primary" onclick="copyBackup()">Text kopieren</button>
+        <button class="btn-primary" onclick="downloadBackup()">💾 Als Datei speichern</button>
+        <label class="btn-secondary" style="display:block; text-align:center;">📂 Aus Datei laden
+            <input type="file" accept=".json,application/json" hidden onchange="restoreFromFile(this)">
+        </label>
         <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border-color);">
+        <div class="muted-small">Oder als Text kopieren / einfügen:</div>
+        <textarea id="backup-text" readonly></textarea>
+        <button class="btn-secondary" onclick="copyBackup()">Text kopieren</button>
         <textarea id="restore-input" placeholder="Sicherungstext hier einfügen..."></textarea>
         <button class="btn-primary" style="background:var(--green); margin-top:8px;" onclick="restoreData()">Wiederherstellen</button>
         <button class="btn-secondary" onclick="toggleBackup(false)">Schließen</button>
     </div>
 </div>
 
-<!-- Modal für Ordner -->
+<!-- Modal: Ordner -->
 <div id="folder-modal" class="modal hidden">
     <div class="modal-content">
         <h3 style="margin-top:0; font-size:20px;" id="folder-modal-title">Neuen Ordner anlegen</h3>
@@ -137,24 +249,22 @@
     </div>
 </div>
 
-<!-- Modal für Karten (Mit Dauermodus & Übersetzer) -->
+<!-- Modal: Karte anlegen / bearbeiten -->
 <div id="card-modal" class="modal hidden">
     <div class="modal-content">
         <h3 style="margin-top:0; font-size:20px;" id="card-modal-title">Neue Karteikarte</h3>
         <input type="text" id="new-card-term" placeholder="Begriff / Frage (z.B. Baum)" oninput="checkDuplicate()">
 
-        <!-- Warnung: Vokabel schon vorhanden -->
         <div id="duplicate-warning" class="dup-box hidden"></div>
-        
-        <!-- Live-Übersetzungsvorschlag -->
+
         <div id="translation-suggestion" class="suggestion-box hidden" onclick="applyTranslation()">
             <span id="suggestion-text">💡 Vorschlag: l'arbre</span>
             <span style="font-size: 11px; font-weight: 700;">Übernehmen ›</span>
         </div>
 
-        <input type="text" id="new-card-def" placeholder="Definition / Übersetzung" oninput="checkTranslation(this.value); checkDuplicate()">
+        <input type="text" id="new-card-def" placeholder="Übersetzung (mehrere richtige mit / trennen)" oninput="checkTranslation(this.value); checkDuplicate()">
+        <input type="text" id="new-card-note" placeholder="Beispielsatz / Notiz (optional)">
 
-        <!-- Bild hinzufügen -->
         <label class="img-upload">📷 Bild hinzufügen (optional)
             <input type="file" id="new-card-img" accept="image/*" onchange="handleImage(this)" hidden>
         </label>
@@ -162,23 +272,85 @@
             <img id="img-preview-el" alt="Vorschau">
             <div><span class="img-remove" onclick="clearImage()">✕ Bild entfernen</span></div>
         </div>
-        
+
         <button class="btn-primary" id="card-next-btn" onclick="createCard(false)">OK & Nächste Karte</button>
         <button class="btn-secondary" id="card-done-btn" onclick="createCard(true)">Fertig / Schließen</button>
         <button class="btn-secondary hidden" id="card-cancel-btn" onclick="toggleCardModal(false)">Abbrechen</button>
     </div>
 </div>
 
+<!-- Modal: Karte verschieben -->
+<div id="move-modal" class="modal hidden">
+    <div class="modal-content">
+        <h3 style="margin-top:0; font-size:20px;">Karte verschieben</h3>
+        <div class="muted-small" id="move-card-label" style="margin-bottom:12px;"></div>
+        <label class="field-label">Zielordner</label>
+        <select id="move-target"></select>
+        <button class="btn-primary" onclick="confirmMove()">Verschieben</button>
+        <button class="btn-secondary" onclick="toggleMoveModal(false)">Abbrechen</button>
+    </div>
+</div>
+
+<!-- Modal: Import / Export -->
+<div id="io-modal" class="modal hidden">
+    <div class="modal-content">
+        <h3 style="margin-top:0; font-size:20px;">Import / Export</h3>
+        <div class="muted-small" style="margin-bottom:8px;">
+            Pro Zeile eine Karte: <b>Begriff ; Übersetzung ; Notiz</b> (Notiz ist optional).
+            Statt ; geht auch ein Tabulator (z. B. aus Excel kopiert). Importiert wird in den aktuell geöffneten Ordner.
+        </div>
+        <textarea id="io-text" style="height:180px;" placeholder="Baum;tree&#10;Haus;house;This is my house."></textarea>
+        <button class="btn-primary" style="margin-top:8px;" onclick="importCards()">Importieren</button>
+        <button class="btn-secondary" onclick="exportCards()">Karten dieses Ordners als Text anzeigen</button>
+        <button class="btn-secondary" onclick="copyExport()">Text kopieren</button>
+        <button class="btn-secondary" onclick="toggleIoModal(false)">Schließen</button>
+    </div>
+</div>
+
+<!-- Modal: Einstellungen -->
+<div id="settings-modal" class="modal hidden">
+    <div class="modal-content">
+        <h3 style="margin-top:0; font-size:20px;">Einstellungen</h3>
+        <label class="field-label">Tagesziel (Karten pro Tag)</label>
+        <input type="number" id="set-goal" min="1" max="500">
+        <label class="field-label">Sprache der Vorderseite (Begriff) – für die Sprachausgabe</label>
+        <select id="set-lang-front"></select>
+        <label class="field-label">Sprache der Rückseite (Übersetzung) – für die Sprachausgabe</label>
+        <select id="set-lang-back"></select>
+        <label class="field-label">Darstellung</label>
+        <select id="set-theme">
+            <option value="auto">Automatisch (wie das Gerät)</option>
+            <option value="light">Hell</option>
+            <option value="dark">Dunkel</option>
+        </select>
+        <button class="btn-primary" onclick="saveSettings()">Speichern</button>
+        <button class="btn-secondary" onclick="toggleSettings(false)">Abbrechen</button>
+    </div>
+</div>
+
 <script>
-    let appData = JSON.parse(localStorage.getItem('karteiFullData')) || { folders: [] };
-    let view = { name: "home", currentFolderId: null };
+    // =====================================================
+    //  Zustand
+    // =====================================================
+    const ALL = '__all__';
+    const DAY = 86400000;
+    const WEEKDAYS = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+
+    let appData;
+    try { appData = JSON.parse(localStorage.getItem('karteiFullData')); } catch (e) { appData = null; }
+    ensureData();
+
+    let view = { name: "home", currentFolderId: null, search: "" };
     let setup = { filter: "all", questionCount: 1, availableCards: [], shuffle: false };
-    try { setup.shuffle = localStorage.getItem('karteiShuffle') === '1'; } catch(e) {}
-    // userAnswer: speichert die eingegebene Antwort der aktuellen Frage
-    let quiz = { cards: [], index: 0, flipped: false, userAnswer: "" };
-    // Lernrichtung: 'fwd' = Begriff → Übersetzung, 'rev' = Übersetzung → Begriff
+    try { setup.shuffle = localStorage.getItem('karteiShuffle') === '1'; } catch (e) {}
+    let quiz = { cards: [], index: 0, flipped: false, userAnswer: "", history: [], results: { richtig: 0, mittel: 0, falsch: 0 } };
     let direction = 'fwd';
-    try { direction = localStorage.getItem('karteiDirection') === 'rev' ? 'rev' : 'fwd'; } catch(e) {}
+    try { direction = localStorage.getItem('karteiDirection') === 'rev' ? 'rev' : 'fwd'; } catch (e) {}
+    let pendingImage = null;
+    let editingCard = null;
+    let movingCard = null;
+    let movingFromFolder = null;
+    let searchHits = [];
 
     const dictionary = {
         "baum": "l'arbre", "haus": "la maison", "hund": "le chien", "katze": "le chat",
@@ -187,72 +359,796 @@
         "stuhl": "la chaise", "tisch": "la table", "milch": "le lait", "käse": "le fromage"
     };
 
+    const LANGS = [
+        ['de-DE', 'Deutsch'], ['en-GB', 'Englisch (UK)'], ['en-US', 'Englisch (US)'], ['fr-FR', 'Französisch'],
+        ['es-ES', 'Spanisch'], ['it-IT', 'Italienisch'], ['pt-PT', 'Portugiesisch'], ['nl-NL', 'Niederländisch'],
+        ['tr-TR', 'Türkisch'], ['pl-PL', 'Polnisch'], ['ru-RU', 'Russisch']
+    ];
+
+    function ensureData() {
+        if (Array.isArray(appData)) appData = { folders: appData };
+        if (!appData || typeof appData !== 'object') appData = { folders: [] };
+        if (!Array.isArray(appData.folders)) appData.folders = [];
+        if (!appData.stats || typeof appData.stats !== 'object') appData.stats = { days: {} };
+        if (!appData.stats.days) appData.stats.days = {};
+        appData.settings = Object.assign({ goal: 20, langFront: 'de-DE', langBack: 'en-GB' }, appData.settings || {});
+    }
+
+    // =====================================================
+    //  Hilfsfunktionen
+    // =====================================================
     function escapeHtml(str) {
         return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     }
+    const esc = escapeHtml;
 
-    function normalizeAnswer(s) {
-        return String(s).trim().toLowerCase().replace(/\s+/g, " ");
+    function normalizeAnswer(s) { return String(s).trim().toLowerCase().replace(/\s+/g, " "); }
+
+    function today() { return Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / DAY); }
+
+    function getCardTerm(c) { return c.q !== undefined ? c.q : (c.term !== undefined ? c.term : ""); }
+    function getCardDef(c) { return c.a !== undefined ? c.a : (c.def !== undefined ? c.def : ""); }
+
+    function persist() {
+        try {
+            localStorage.setItem('karteiFullData', JSON.stringify(appData));
+        } catch (e) {
+            alert("Speicher voll! Bitte lösche ein paar Bilder oder Karten und sichere deine Daten über 📥.");
+        }
+    }
+    function saveData() { persist(); render(); }
+
+    function getFolder(id) { return appData.folders.find(f => f.id === id); }
+    function folderLabel(id) { if (id === ALL) return 'Alle Ordner'; const f = getFolder(id); return f ? f.name : ''; }
+    function getSubfolders(parentId) { return appData.folders.filter(f => f.parent === parentId); }
+    function getAllSubfolderIds(folderId) {
+        if (folderId === ALL) return appData.folders.map(f => f.id);
+        let ids = [folderId];
+        getSubfolders(folderId).forEach(child => { ids = ids.concat(getAllSubfolderIds(child.id)); });
+        return ids;
+    }
+    function getCardsForFolder(folderId) { const f = getFolder(folderId); return f ? (f.cards || []) : []; }
+    function getAllCardsRecursive(folderId) {
+        let cards = [];
+        getAllSubfolderIds(folderId).forEach(id => { cards = cards.concat(getCardsForFolder(id)); });
+        return cards;
+    }
+    function folderPath(f) {
+        let parts = [f.name], cur = f, guard = 0;
+        while (cur.parent && guard++ < 20) { cur = getFolder(cur.parent); if (!cur) break; parts.unshift(cur.name); }
+        return parts.join(' › ');
     }
 
-    function checkTranslation(val) {
-        let clean = val.toLowerCase().trim();
-        let box = document.getElementById('translation-suggestion');
-        if (dictionary[clean]) {
-            document.getElementById('suggestion-text').innerText = "💡 Vorschlag: " + dictionary[clean];
-            box.classList.remove('hidden');
-        } else {
-            box.classList.add('hidden');
+    // =====================================================
+    //  Lernrichtung, Status & Wiederholungs-Planung
+    // =====================================================
+    function keys(dir) { return dir === 'rev' ? { s: 'sr', due: 'dueR', ivl: 'ivlR' } : { s: 's', due: 'due', ivl: 'ivl' }; }
+
+    function getCardStatus(c) {
+        if (direction === 'rev') return c.sr !== undefined ? c.sr : "offen";
+        return c.s !== undefined ? c.s : (c.status !== undefined ? c.status : "offen");
+    }
+    function getPrompt(c) { return direction === 'rev' ? getCardDef(c) : getCardTerm(c); }
+    function getAnswer(c) { return direction === 'rev' ? getCardTerm(c) : getCardDef(c); }
+
+    // Fälligkeit (Tageszahl) oder null, wenn die Karte noch nie geprüft wurde
+    function cardDue(c) {
+        if (getCardStatus(c) === 'offen') return null;
+        const d = c[keys(direction).due];
+        return d === undefined ? today() : d;
+    }
+    function isDue(c) { const d = cardDue(c); return d !== null && d <= today(); }
+    function dueLabel(c) {
+        const d = cardDue(c);
+        if (d === null) return '';
+        const diff = d - today();
+        if (diff <= 0) return '📅 fällig';
+        return '📅 in ' + diff + (diff === 1 ? ' Tag' : ' Tagen');
+    }
+
+    function applyRating(c, status) {
+        const k = keys(direction);
+        const old = c[k.ivl] || 0;
+        let ivl;
+        if (status === 'richtig') ivl = old < 1 ? 2 : Math.max(old + 1, Math.round(old * 2.2));
+        else if (status === 'mittel') ivl = old < 1 ? 1 : Math.max(1, Math.round(old * 1.3));
+        else ivl = 0;
+        c[k.ivl] = ivl;
+        c[k.due] = today() + ivl;
+        c[k.s] = status;
+        if (direction === 'fwd') c.status = status;
+    }
+
+    const SNAP_FIELDS = ['s', 'status', 'sr', 'due', 'ivl', 'dueR', 'ivlR'];
+    function snapshotCard(c) { const snap = {}; SNAP_FIELDS.forEach(f => { snap[f] = c[f]; }); return snap; }
+    function restoreCard(c, snap) { SNAP_FIELDS.forEach(f => { if (snap[f] === undefined) delete c[f]; else c[f] = snap[f]; }); }
+
+    function filterCards(cards, f) {
+        switch (f) {
+            case 'due': return cards.filter(isDue);
+            case 'mittel_falsch': return cards.filter(c => getCardStatus(c) === 'mittel' || getCardStatus(c) === 'falsch');
+            case 'falsch': return cards.filter(c => getCardStatus(c) === 'falsch');
+            case 'offen': return cards.filter(c => getCardStatus(c) === 'offen');
+            case 'star': return cards.filter(c => c.star);
+            default: return [...cards];
         }
     }
 
+    // ---------- Statistik / Streak ----------
+    function recordStat(status, delta) {
+        const key = String(today());
+        const day = appData.stats.days[key] || (appData.stats.days[key] = { n: 0, r: 0, m: 0, f: 0 });
+        day.n = Math.max(0, day.n + delta);
+        if (status === 'richtig') day.r = Math.max(0, day.r + delta);
+        else if (status === 'mittel') day.m = Math.max(0, day.m + delta);
+        else day.f = Math.max(0, day.f + delta);
+    }
+    function doneToday() { const d = appData.stats.days[today()]; return d ? d.n : 0; }
+    function computeStreak() {
+        const days = appData.stats.days;
+        let d = today(), n = 0;
+        if (!(days[d] && days[d].n > 0)) d--;
+        while (days[d] && days[d].n > 0) { n++; d--; }
+        return n;
+    }
+
+    // =====================================================
+    //  Antworten prüfen (mehrere Lösungen, Tippfehler)
+    // =====================================================
+    function splitAnswers(s) { return String(s).split(/[\/;|]/).map(x => x.trim()).filter(Boolean); }
+
+    const ARTICLES = ['the', 'a', 'an', 'to', 'der', 'die', 'das', 'ein', 'eine', 'le', 'la', 'les', 'l', 'un', 'une', 'el', 'los', 'las', 'il', 'lo', 'i'];
+    function looseNorm(s) {
+        let t = String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        t = t.replace(/['’`´]/g, ' ').replace(/[^\p{L}\p{N}\s]/gu, ' ').replace(/\s+/g, ' ').trim();
+        const parts = t.split(' ');
+        if (parts.length > 1 && ARTICLES.includes(parts[0])) t = parts.slice(1).join(' ');
+        return t;
+    }
+    function levenshtein(a, b) {
+        const m = a.length, n = b.length;
+        if (!m) return n; if (!n) return m;
+        let prev = [], cur = [];
+        for (let j = 0; j <= n; j++) prev[j] = j;
+        for (let i = 1; i <= m; i++) {
+            cur[0] = i;
+            for (let j = 1; j <= n; j++) {
+                const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+            }
+            const tmp = prev; prev = cur; cur = tmp;
+        }
+        return prev[n];
+    }
+    // -> 'empty' | 'exact' | 'close' | 'wrong'
+    function evaluateAnswer(user, correct) {
+        if (!String(user).trim()) return 'empty';
+        let answers = splitAnswers(correct);
+        if (!answers.length) answers = [String(correct)];
+        const u = normalizeAnswer(user);
+        if (normalizeAnswer(correct) === u || answers.some(a => normalizeAnswer(a) === u)) return 'exact';
+        const ul = looseNorm(user);
+        for (const a of answers) {
+            const al = looseNorm(a);
+            if (!al) continue;
+            if (ul === al) return 'close';
+            const maxD = al.length >= 9 ? 2 : (al.length >= 4 ? 1 : 0);
+            if (maxD && levenshtein(ul, al) <= maxD) return 'close';
+        }
+        return 'wrong';
+    }
+
+    // =====================================================
+    //  Sprachausgabe
+    // =====================================================
+    function speak(text, lang) {
+        try {
+            if (!('speechSynthesis' in window)) { alert('Dein Browser unterstützt keine Sprachausgabe.'); return; }
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = lang;
+            window.speechSynthesis.speak(u);
+        } catch (e) {}
+    }
+    function speakQuiz(which) {
+        const card = quiz.cards[quiz.index];
+        if (!card) return;
+        const promptLang = direction === 'rev' ? appData.settings.langBack : appData.settings.langFront;
+        const answerLang = direction === 'rev' ? appData.settings.langFront : appData.settings.langBack;
+        const text = which === 'prompt' ? getPrompt(card) : getAnswer(card);
+        const first = splitAnswers(text)[0] || text;
+        speak(first, which === 'prompt' ? promptLang : answerLang);
+    }
+
+    // =====================================================
+    //  Rendering
+    // =====================================================
+    function directionToggleHtml() {
+        return `
+            <div class="dir-toggle">
+                <div class="dir-btn ${direction === 'fwd' ? 'active' : ''}" onclick="setDirection('fwd')">Begriff → Übersetzung<small>z. B. Deutsch → Englisch</small></div>
+                <div class="dir-btn ${direction === 'rev' ? 'active' : ''}" onclick="setDirection('rev')">Übersetzung → Begriff<small>z. B. Englisch → Deutsch</small></div>
+            </div>
+        `;
+    }
+
+    function summaryHtml() {
+        const goal = Math.max(1, parseInt(appData.settings.goal) || 20);
+        const done = doneToday();
+        const pct = Math.min(100, Math.round(done / goal * 100));
+        const streak = computeStreak();
+        const dueCount = getAllCardsRecursive(ALL).filter(isDue).length;
+        return `
+            <div class="summary">
+                <div class="sum-row">
+                    <span>🔥 ${streak} ${streak === 1 ? 'Tag' : 'Tage'} in Folge</span>
+                    <span>Heute ${done} / ${goal} ${done >= goal ? '🎉' : ''}</span>
+                </div>
+                <div class="progress"><div class="progress-bar ${done >= goal ? 'done' : ''}" style="width:${pct}%"></div></div>
+                <div class="sum-row">
+                    <span class="muted-small" style="font-size:13px;">📅 ${dueCount} ${dueCount === 1 ? 'Karte' : 'Karten'} fällig</span>
+                    <button class="btn-small" ${dueCount === 0 ? 'disabled' : ''} onclick="startDueAll()">Fällige üben</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function backupReminderHtml() {
+        const total = getAllCardsRecursive(ALL).length;
+        if (total === 0) return '';
+        let last = 0;
+        try { last = parseInt(localStorage.getItem('karteiLastBackup') || '0') || 0; } catch (e) {}
+        const days = last ? Math.floor((Date.now() - last) / DAY) : null;
+        if (last && days < 7) return '';
+        const txt = last ? `Letzte Sicherung vor ${days} ${days === 1 ? 'Tag' : 'Tagen'}` : 'Noch keine Sicherung gemacht';
+        return `<div class="banner warn" onclick="toggleBackup(true)"><span>💾 ${txt} – jetzt sichern</span><span>›</span></div>`;
+    }
+
+    function folderRowHtml(f, isRoot) {
+        const letter = f.name.charAt(0).toUpperCase();
+        const subfolders = getSubfolders(f.id);
+        const allCards = getAllCardsRecursive(f.id);
+        const dueN = allCards.filter(isDue).length;
+        return `
+            <div class="card-item" onclick="openFolder('${f.id}')">
+                <div style="display:flex; align-items:center;">
+                    <div class="badge-letter" style="background:${f.color || (isRoot ? '#bae6fd' : '#dcfce7')}">${esc(letter)}</div>
+                    <div>
+                        <h3 style="margin:0; font-size:17px; font-weight:700;">${esc(f.name)}</h3>
+                        <span style="font-size:13px; color:var(--text-muted); font-weight:600;">${allCards.length} Karten${subfolders.length > 0 ? ' · ' + subfolders.length + ' Unterordner' : ''}${dueN > 0 ? ' · 📅 ' + dueN + ' fällig' : ''}</span>
+                    </div>
+                </div>
+                <span class="act" onclick="event.stopPropagation(); deleteFolder('${f.id}')">🗑️</span>
+            </div>
+        `;
+    }
+
+    function renderHome() {
+        const rootFolders = getSubfolders(null);
+        const total = getAllCardsRecursive(ALL).length;
+        let html = `
+            <div class="header">
+                <div class="logo">🗂️ Kartei</div>
+                <div style="display:flex; gap:8px;">
+                    <div class="icon-box" title="Statistik" onclick="openStats()">📊</div>
+                    <div class="icon-box" title="Einstellungen" onclick="toggleSettings(true)">⚙️</div>
+                    <div class="icon-box" title="Sicherung" onclick="toggleBackup(true)">📥</div>
+                    <div class="icon-box" title="Neuer Ordner" onclick="toggleFolderModal(true)">➕</div>
+                </div>
+            </div>
+        `;
+        if (total > 0) { html += directionToggleHtml() + summaryHtml(); }
+        html += backupReminderHtml();
+        if (rootFolders.length === 0) {
+            html += `<div class="banner"><span>Noch keine Ordner. Klicke auf ➕ oder lade eine Sicherung über 📥!</span></div>`;
+        }
+        if (total > 0) {
+            html += `<input type="text" id="search-input" class="search-input" placeholder="🔍 Vokabel suchen (alle Ordner) …" value="${esc(view.search || '')}" oninput="doSearch(this.value)">`;
+        }
+        html += `<div id="search-results" class="hidden"></div><div id="folder-list">`;
+        rootFolders.forEach(f => { html += folderRowHtml(f, true); });
+        html += `</div>`;
+        document.getElementById('app').innerHTML = html;
+        updateSearchResults();
+    }
+
+    function renderFolder() {
+        const f = getFolder(view.currentFolderId);
+        if (!f) { goHome(); return; }
+        const subfolders = getSubfolders(f.id);
+        const directCards = f.cards || [];
+        const branch = getAllCardsRecursive(f.id);
+        const richtig = branch.filter(c => getCardStatus(c) === 'richtig').length;
+        const mittel = branch.filter(c => getCardStatus(c) === 'mittel').length;
+        const falsch = branch.filter(c => getCardStatus(c) === 'falsch').length;
+        const offen = branch.filter(c => getCardStatus(c) === 'offen').length;
+        const dueN = branch.filter(isDue).length;
+        const starN = branch.filter(c => c.star).length;
+
+        let html = `
+            <a class="back-link" onclick="${f.parent ? `openFolder('${f.parent}')` : 'goHome()'}">‹ ${f.parent ? 'Übergeordneter Ordner' : 'Hauptübersicht'}</a>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h1 style="margin:0; font-size:30px; font-weight:800;">${esc(f.name)}</h1>
+                <div class="icon-box" title="Neue Karte" onclick="toggleCardModal(true)">➕</div>
+            </div>
+            ${directionToggleHtml()}
+            <div class="chips">
+                <span class="chip green">● Richtig ${richtig}</span>
+                <span class="chip yellow">● Mittel ${mittel}</span>
+                <span class="chip red">● Falsch ${falsch}</span>
+                <span class="chip">● Offen ${offen}</span>
+                <span class="chip blue">📅 Fällig ${dueN}</span>
+                <span class="chip yellow">★ ${starN}</span>
+            </div>
+            <div style="display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap;">
+                <button class="btn-primary" style="width:auto;" onclick="openSetup()">Prüfung starten</button>
+                <button class="btn-secondary" style="width:auto; margin:0;" onclick="toggleFolderModal(true)">+ Unterordner</button>
+                <button class="btn-secondary" style="width:auto; margin:0;" onclick="toggleIoModal(true)">⇅ Import / Export</button>
+            </div>
+        `;
+
+        if (subfolders.length > 0) {
+            html += `<h3 style="color:var(--text-muted); font-size:13px; text-transform:uppercase; margin-bottom:12px;">Unterordner</h3>`;
+            subfolders.forEach(sub => { html += folderRowHtml(sub, false); });
+        }
+
+        html += `<h3 style="color:var(--text-muted); font-size:13px; text-transform:uppercase; margin-top:24px; margin-bottom:12px;">Karten in diesem Ordner</h3>`;
+        if (directCards.length === 0) html += `<p style="color:var(--text-muted); font-size:14px;">Keine direkten Karten.</p>`;
+
+        directCards.forEach((c, cIdx) => {
+            const st = getCardStatus(c);
+            const statusColor = st === 'richtig' ? 'var(--green)' : st === 'mittel' ? 'var(--yellow)' : st === 'falsch' ? 'var(--red)' : '#cbd5e1';
+            const dl = dueLabel(c);
+            html += `
+                <div class="card-item" style="cursor:default;">
+                    <div style="min-width:0;">
+                        <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${statusColor}; margin-right:10px;"></span>
+                        <strong style="font-size:16px;">${esc(getCardTerm(c))}</strong>
+                        <div style="color:var(--text-muted); font-size:14px; margin-left:20px; font-weight:500;">${esc(getCardDef(c))}</div>
+                        ${c.note ? `<div style="color:var(--text-muted); font-size:12px; margin-left:20px; font-style:italic;">${esc(c.note)}</div>` : ''}
+                        ${dl ? `<div class="muted-small" style="margin-left:20px;">${dl}</div>` : ''}
+                    </div>
+                    <div class="actions">
+                        ${c.img ? `<img class="thumb" src="${c.img}" alt="">` : ''}
+                        <span class="star-mini ${c.star ? 'on' : ''}" title="Markieren" onclick="toggleStarCard(${cIdx})">${c.star ? '★' : '☆'}</span>
+                        <span class="act" title="Bearbeiten" onclick="editCard(${cIdx})">✏️</span>
+                        <span class="act" title="Verschieben" onclick="moveCard(${cIdx})">📁</span>
+                        <span class="act" title="Löschen" onclick="deleteCard(${cIdx})">🗑️</span>
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('app').innerHTML = html;
+    }
+
+    function renderSetup() {
+        updateSetupCards();
+        const all = getAllCardsRecursive(view.currentFolderId);
+        const opts = [['all', 'Alle Karten'], ['due', '📅 Heute fällig'], ['mittel_falsch', 'Mittel und falsch'], ['falsch', 'Nur falsch'], ['offen', 'Noch nicht geprüft'], ['star', '★ Markiert']];
+        const optsHtml = opts.map(o => `<div class="option-box ${setup.filter === o[0] ? 'active' : ''}" onclick="setFilter('${o[0]}')"><span>${o[1]}</span> <span class="count-badge">${filterCards(all, o[0]).length}</span></div>`).join('');
+        document.getElementById('app').innerHTML = `
+            <a class="back-link" onclick="leaveToFolder()">‹ ${view.currentFolderId === ALL ? 'Übersicht' : 'Ordner'}</a>
+            <h1 style="margin:0; font-size:28px; font-weight:800;">Prüfung starten</h1>
+            <p style="color:var(--text-muted); margin-top:2px; font-weight:600;">${esc(folderLabel(view.currentFolderId))}</p>
+            <div class="section-title">Lernrichtung</div>
+            ${directionToggleHtml()}
+            <div class="section-title">Welche Karten?</div>
+            <div class="grid-2">${optsHtml}</div>
+            <div class="section-title">Reihenfolge</div>
+            <div class="dir-toggle">
+                <div class="dir-btn ${setup.shuffle ? 'active' : ''}" onclick="setShuffle(true)">🔀 Gemischt</div>
+                <div class="dir-btn ${!setup.shuffle ? 'active' : ''}" onclick="setShuffle(false)">➡️ Der Reihe nach</div>
+            </div>
+            <div class="section-title">Wie viele Fragen?</div>
+            <div class="slider-box">
+                <div class="big-number" id="count-display">${setup.questionCount}</div>
+                <div class="sub-text">von ${setup.availableCards.length} Karten</div>
+                <input type="range" min="1" max="${Math.max(1, setup.availableCards.length)}" value="${setup.questionCount}" oninput="updateCount(this.value)">
+                <button class="btn-secondary" onclick="setMaxCount()">Alle ${setup.availableCards.length} Fragen</button>
+            </div>
+            <button class="btn-primary" style="margin-top:24px;" ${setup.availableCards.length === 0 ? 'disabled' : ''} onclick="startQuiz()">Starten</button>
+        `;
+    }
+
+    function renderQuiz() {
+        const app = document.getElementById('app');
+        const card = quiz.cards[quiz.index];
+        const undoBtn = quiz.history.length > 0 ? `<button class="btn-secondary" onclick="undoRating()">↩ Letzte Bewertung rückgängig</button>` : '';
+
+        if (!card) {
+            const r = quiz.results;
+            app.innerHTML = `
+                <div style="text-align:center; padding:40px 0 10px;">
+                    <h2>🎉 Prüfung abgeschlossen!</h2>
+                    <div class="chips" style="justify-content:center;">
+                        <span class="chip green">Richtig ${r.richtig}</span>
+                        <span class="chip yellow">Mittel ${r.mittel}</span>
+                        <span class="chip red">Falsch ${r.falsch}</span>
+                    </div>
+                    <p class="muted-small">Heute insgesamt: ${doneToday()} / ${Math.max(1, parseInt(appData.settings.goal) || 20)} Karten</p>
+                    <button class="btn-primary" onclick="leaveToFolder()">Zurück</button>
+                    ${undoBtn}
+                </div>`;
+            return;
+        }
+
+        const userAns = quiz.userAnswer || "";
+        const state = evaluateAnswer(userAns, getAnswer(card));
+        const stateMap = {
+            exact: { cls: 'ok', label: '✓ richtig' },
+            close: { cls: 'close', label: '≈ fast richtig' },
+            wrong: { cls: 'nok', label: '✗ falsch' },
+            empty: { cls: '', label: '' }
+        };
+        const suggest = { exact: 'richtig', close: 'mittel', wrong: 'falsch', empty: '' }[state];
+
+        let bodyHtml;
+        if (quiz.flipped) {
+            bodyHtml = `
+                <div class="answer-compare">
+                    <div class="answer-row mine ${stateMap[state].cls}">
+                        <div class="answer-label">Deine Antwort ${stateMap[state].label}</div>
+                        <div class="answer-value">${state === 'empty' ? '<em>– nichts eingegeben –</em>' : esc(userAns)}</div>
+                    </div>
+                    <div class="answer-row correct">
+                        <div class="answer-label">Richtige Antwort <span class="speak" onclick="speakQuiz('answer')" title="Vorlesen">🔊</span></div>
+                        <div class="answer-value">${esc(getAnswer(card))}</div>
+                    </div>
+                    ${card.note ? `<div class="answer-row note"><div class="answer-label">Notiz</div><div class="answer-value">${esc(card.note)}</div></div>` : ''}
+                </div>
+                ${card.img ? `<img class="card-img" src="${card.img}" alt="">` : ''}
+            `;
+        } else {
+            bodyHtml = `<input type="text" id="quiz-answer" class="answer-input" placeholder="Schreibe deine Antwort ..." value="${esc(userAns)}" autocomplete="off" oninput="quiz.userAnswer = this.value" onkeydown="if(event.key==='Enter'){flipQuizCard();}">`;
+        }
+
+        app.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <a class="back-link" onclick="leaveToFolder()" style="margin:0;">‹ Pausieren</a>
+                <div style="display:flex; align-items:center; gap:14px;">
+                    <span style="font-weight:700; color:var(--text-muted); font-size:14px;">Frage ${quiz.index + 1} von ${quiz.cards.length}</span>
+                    <span class="star-btn ${card.star ? 'on' : ''}" title="Frage markieren" onclick="toggleStarQuiz()">${card.star ? '★' : '☆'}</span>
+                </div>
+            </div>
+            <div class="paper-card">
+                <div class="paper-header"><span>Frage · ${direction === 'rev' ? 'Übersetzung → Begriff' : 'Begriff → Übersetzung'}</span><span>${esc(folderLabel(view.currentFolderId))}</span></div>
+                <div class="paper-body">
+                    <div class="question-text">${esc(getPrompt(card))}<span class="speak" onclick="speakQuiz('prompt')" title="Vorlesen">🔊</span></div>
+                    ${bodyHtml}
+                </div>
+            </div>
+            <button class="btn-primary" style="margin-bottom:16px;" onclick="flipQuizCard()">${quiz.flipped ? 'Zurück zur Eingabe' : 'Umdrehen'}</button>
+            <div class="rating-grid">
+                <button class="btn-rate btn-green ${suggest === 'richtig' ? 'suggest' : ''}" ${!quiz.flipped ? 'disabled' : ''} onclick="rateQuizCard('richtig')">Richtig</button>
+                <button class="btn-rate btn-yellow ${suggest === 'mittel' ? 'suggest' : ''}" ${!quiz.flipped ? 'disabled' : ''} onclick="rateQuizCard('mittel')">Mittel</button>
+                <button class="btn-rate btn-red ${suggest === 'falsch' ? 'suggest' : ''}" ${!quiz.flipped ? 'disabled' : ''} onclick="rateQuizCard('falsch')">Falsch</button>
+            </div>
+            ${undoBtn}
+        `;
+
+        if (!quiz.flipped) {
+            const inp = document.getElementById('quiz-answer');
+            if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
+        }
+    }
+
+    function barChartHtml(items) {
+        const max = Math.max(1, ...items.map(i => i.value));
+        return `<div class="chart">` + items.map(i => `
+            <div class="bar-col">
+                <div class="bar-val">${i.value || ''}</div>
+                <div class="bar ${i.hl ? 'hl' : ''}" style="height:${Math.round(i.value / max * 90)}px; ${i.value ? '' : 'opacity:0.2;'}"></div>
+                <div class="bar-lbl">${i.label}</div>
+            </div>`).join('') + `</div>`;
+    }
+
+    function renderStats() {
+        const days = appData.stats.days;
+        const t = today();
+        const all = getAllCardsRecursive(ALL);
+
+        let last14 = [];
+        for (let i = 13; i >= 0; i--) {
+            const d = t - i;
+            last14.push({ label: WEEKDAYS[new Date(d * DAY).getUTCDay()], value: (days[d] || {}).n || 0, hl: i === 0 });
+        }
+        let n7 = 0, r7 = 0;
+        for (let i = 0; i < 7; i++) { const x = days[t - i]; if (x) { n7 += x.n; r7 += x.r; } }
+        let totalAll = 0;
+        Object.keys(days).forEach(k => { totalAll += days[k].n || 0; });
+
+        let forecast = [];
+        for (let i = 0; i < 7; i++) {
+            const cnt = all.filter(c => {
+                const d = cardDue(c);
+                if (d === null) return false;
+                return i === 0 ? d <= t : d === t + i;
+            }).length;
+            forecast.push({ label: i === 0 ? 'Heute' : WEEKDAYS[new Date((t + i) * DAY).getUTCDay()], value: cnt, hl: i === 0 });
+        }
+
+        const cnt = s => all.filter(c => getCardStatus(c) === s).length;
+        document.getElementById('app').innerHTML = `
+            <a class="back-link" onclick="goHome()">‹ Hauptübersicht</a>
+            <h1 style="margin:0 0 4px; font-size:28px; font-weight:800;">📊 Statistik</h1>
+            ${directionToggleHtml()}
+            <div class="stat-grid">
+                <div class="stat-box"><div class="stat-num">🔥 ${computeStreak()}</div><div class="stat-lbl">Tage in Folge</div></div>
+                <div class="stat-box"><div class="stat-num">${n7 ? Math.round(r7 / n7 * 100) + '%' : '–'}</div><div class="stat-lbl">Richtig (7 Tage)</div></div>
+                <div class="stat-box"><div class="stat-num">${totalAll}</div><div class="stat-lbl">Bewertungen gesamt</div></div>
+            </div>
+            <div class="section-title">Geübte Karten pro Tag (letzte 14 Tage)</div>
+            ${barChartHtml(last14)}
+            <div class="section-title">Fällig in den nächsten 7 Tagen</div>
+            ${barChartHtml(forecast)}
+            <div class="section-title">Alle Karten (${all.length}) – ${direction === 'rev' ? 'Übersetzung → Begriff' : 'Begriff → Übersetzung'}</div>
+            <div class="chips">
+                <span class="chip green">● Richtig ${cnt('richtig')}</span>
+                <span class="chip yellow">● Mittel ${cnt('mittel')}</span>
+                <span class="chip red">● Falsch ${cnt('falsch')}</span>
+                <span class="chip">● Offen ${cnt('offen')}</span>
+                <span class="chip yellow">★ ${all.filter(c => c.star).length}</span>
+            </div>
+        `;
+    }
+
+    function render() {
+        if (view.name === "home") renderHome();
+        else if (view.name === "folder") renderFolder();
+        else if (view.name === "setup") renderSetup();
+        else if (view.name === "quiz") renderQuiz();
+        else if (view.name === "stats") renderStats();
+    }
+
+    // =====================================================
+    //  Navigation
+    // =====================================================
+    function goHome() { view = { name: "home", currentFolderId: null, search: "" }; render(); }
+    function openFolder(id) { view = { name: "folder", currentFolderId: id }; render(); }
+    function openSetup() { view.name = "setup"; render(); }
+    function openStats() { view = { name: "stats", currentFolderId: null }; render(); }
+    function leaveToFolder() { if (view.currentFolderId === ALL) goHome(); else openFolder(view.currentFolderId); }
+
+    function setDirection(d) {
+        direction = d;
+        try { localStorage.setItem('karteiDirection', d); } catch (e) {}
+        render();
+    }
+
+    function startDueAll() {
+        const due = getAllCardsRecursive(ALL).filter(isDue).length;
+        const goal = Math.max(1, parseInt(appData.settings.goal) || 20);
+        setup.filter = 'due';
+        setup.questionCount = Math.max(1, Math.min(due, goal));
+        view = { name: "setup", currentFolderId: ALL };
+        render();
+    }
+
+    // ---------- Suche ----------
+    function doSearch(q) { view.search = q; updateSearchResults(); }
+    function updateSearchResults() {
+        const box = document.getElementById('search-results');
+        const list = document.getElementById('folder-list');
+        if (!box || !list) return;
+        const q = normalizeAnswer(view.search || '');
+        if (!q) { box.classList.add('hidden'); list.classList.remove('hidden'); return; }
+        searchHits = [];
+        appData.folders.forEach(f => (f.cards || []).forEach(c => {
+            if ([getCardTerm(c), getCardDef(c), c.note || ''].some(t => normalizeAnswer(t).includes(q))) searchHits.push({ card: c, folder: f });
+        }));
+        let html = `<div class="muted-small" style="margin-bottom:10px;">${searchHits.length} Treffer</div>`;
+        searchHits.slice(0, 50).forEach((h, i) => {
+            html += `
+                <div class="card-item" onclick="openFolder('${h.folder.id}')">
+                    <div style="min-width:0;">
+                        <strong style="font-size:16px;">${esc(getCardTerm(h.card))}</strong>
+                        <div style="color:var(--text-muted); font-size:14px; font-weight:500;">${esc(getCardDef(h.card))}</div>
+                        <div class="muted-small">📁 ${esc(folderPath(h.folder))}</div>
+                    </div>
+                    <div class="actions">
+                        <span class="star-mini ${h.card.star ? 'on' : ''}" onclick="event.stopPropagation(); toggleStarHit(${i})">${h.card.star ? '★' : '☆'}</span>
+                    </div>
+                </div>`;
+        });
+        if (searchHits.length > 50) html += `<div class="muted-small">… und ${searchHits.length - 50} weitere. Suche genauer eingrenzen.</div>`;
+        box.innerHTML = html;
+        box.classList.remove('hidden');
+        list.classList.add('hidden');
+    }
+    function toggleStarHit(i) {
+        const h = searchHits[i]; if (!h) return;
+        h.card.star = !h.card.star; persist(); updateSearchResults();
+    }
+
+    // =====================================================
+    //  Prüfung: Setup & Ablauf
+    // =====================================================
+    function updateSetupCards() {
+        const cards = getAllCardsRecursive(view.currentFolderId);
+        setup.availableCards = filterCards(cards, setup.filter);
+        setup.questionCount = Math.min(Math.max(1, setup.questionCount), setup.availableCards.length || 1);
+    }
+    function setShuffle(v) {
+        setup.shuffle = v;
+        try { localStorage.setItem('karteiShuffle', v ? '1' : '0'); } catch (e) {}
+        render();
+    }
+    function setFilter(f) { setup.filter = f; render(); }
+    function updateCount(val) { setup.questionCount = parseInt(val); document.getElementById('count-display').innerText = val; }
+    function setMaxCount() { setup.questionCount = setup.availableCards.length; render(); }
+
+    function startQuiz() {
+        let pool = [...setup.availableCards];
+        if (setup.shuffle) {
+            for (let i = pool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+            }
+        }
+        quiz.cards = pool.slice(0, setup.questionCount);
+        quiz.index = 0; quiz.flipped = false; quiz.userAnswer = "";
+        quiz.history = []; quiz.results = { richtig: 0, mittel: 0, falsch: 0 };
+        view.name = "quiz";
+        render();
+    }
+
+    function syncQuizInput() { const inp = document.getElementById('quiz-answer'); if (inp) quiz.userAnswer = inp.value; }
+    function flipQuizCard() { syncQuizInput(); quiz.flipped = !quiz.flipped; render(); }
+
+    function rateQuizCard(status) {
+        const card = quiz.cards[quiz.index];
+        if (!card) return;
+        quiz.history.push({ card: card, snap: snapshotCard(card), status: status });
+        applyRating(card, status);
+        recordStat(status, 1);
+        quiz.results[status]++;
+        quiz.index++; quiz.flipped = false; quiz.userAnswer = "";
+        saveData();
+    }
+    function undoRating() {
+        const h = quiz.history.pop();
+        if (!h) return;
+        restoreCard(h.card, h.snap);
+        recordStat(h.status, -1);
+        quiz.results[h.status] = Math.max(0, quiz.results[h.status] - 1);
+        quiz.index = Math.max(0, quiz.index - 1);
+        quiz.flipped = false; quiz.userAnswer = "";
+        saveData();
+    }
+
+    function toggleStarQuiz() {
+        const card = quiz.cards[quiz.index];
+        if (!card) return;
+        syncQuizInput();
+        card.star = !card.star;
+        persist(); render();
+    }
+    function toggleStarCard(cIdx) {
+        const f = getFolder(view.currentFolderId);
+        if (f && f.cards && f.cards[cIdx]) { f.cards[cIdx].star = !f.cards[cIdx].star; saveData(); }
+    }
+
+    // =====================================================
+    //  Sicherung
+    // =====================================================
+    function markBackup() { try { localStorage.setItem('karteiLastBackup', String(Date.now())); } catch (e) {} }
+    function toggleBackup(s) {
+        document.getElementById('backup-modal').classList.toggle('hidden', !s);
+        if (s) document.getElementById('backup-text').value = JSON.stringify(appData);
+        else if (view.name === 'home') render();
+    }
+    function copyBackup() {
+        const t = document.getElementById('backup-text');
+        t.select();
+        try { navigator.clipboard.writeText(t.value); } catch (e) { document.execCommand('copy'); }
+        markBackup();
+        alert("Kopiert!");
+    }
+    function downloadBackup() {
+        const blob = new Blob([JSON.stringify(appData)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'kartei-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        markBackup();
+    }
+    function restoreFromFile(input) {
+        const file = input.files && input.files[0];
+        if (!file) return;
+        const r = new FileReader();
+        r.onload = e => { document.getElementById('restore-input').value = e.target.result; restoreData(); };
+        r.readAsText(file);
+        input.value = '';
+    }
+    function restoreData() {
+        try {
+            const parsed = JSON.parse(document.getElementById('restore-input').value);
+            if (!confirm("Das ersetzt alle aktuellen Karten durch die Sicherung. Fortfahren?")) return;
+            appData = parsed.folders ? parsed : { folders: parsed };
+            ensureData();
+            persist(); toggleBackup(false); goHome(); alert("Sicherung erfolgreich geladen!");
+        } catch (e) { alert("Ungültiges JSON-Format!"); }
+    }
+
+    // =====================================================
+    //  Einstellungen
+    // =====================================================
+    function applyTheme() {
+        let t = 'auto';
+        try { t = localStorage.getItem('karteiTheme') || 'auto'; } catch (e) {}
+        document.documentElement.setAttribute('data-theme', t);
+    }
+    function langOptions(selected) {
+        return LANGS.map(l => `<option value="${l[0]}" ${l[0] === selected ? 'selected' : ''}>${l[1]}</option>`).join('');
+    }
+    function toggleSettings(s) {
+        document.getElementById('settings-modal').classList.toggle('hidden', !s);
+        if (!s) return;
+        document.getElementById('set-goal').value = appData.settings.goal;
+        document.getElementById('set-lang-front').innerHTML = langOptions(appData.settings.langFront);
+        document.getElementById('set-lang-back').innerHTML = langOptions(appData.settings.langBack);
+        let t = 'auto';
+        try { t = localStorage.getItem('karteiTheme') || 'auto'; } catch (e) {}
+        document.getElementById('set-theme').value = t;
+    }
+    function saveSettings() {
+        const goal = parseInt(document.getElementById('set-goal').value);
+        appData.settings.goal = goal > 0 ? Math.min(goal, 500) : 20;
+        appData.settings.langFront = document.getElementById('set-lang-front').value;
+        appData.settings.langBack = document.getElementById('set-lang-back').value;
+        try { localStorage.setItem('karteiTheme', document.getElementById('set-theme').value); } catch (e) {}
+        applyTheme();
+        toggleSettings(false);
+        saveData();
+    }
+
+    // =====================================================
+    //  Ordner
+    // =====================================================
+    function toggleFolderModal(s) { document.getElementById('folder-modal').classList.toggle('hidden', !s); }
+    function createFolder() {
+        const name = document.getElementById('new-folder-name').value.trim();
+        if (name) {
+            appData.folders.push({ id: "folder_" + Date.now(), name: name, color: "#bae6fd", parent: view.currentFolderId, cards: [] });
+            document.getElementById('new-folder-name').value = '';
+            saveData(); toggleFolderModal(false);
+        }
+    }
+    function deleteFolder(id) {
+        if (confirm("Ordner wirklich löschen? (inkl. Unterordner und Karten)")) {
+            const idsToDelete = getAllSubfolderIds(id);
+            appData.folders = appData.folders.filter(f => !idsToDelete.includes(f.id));
+            saveData(); if (view.currentFolderId === id) goHome();
+        }
+    }
+
+    // =====================================================
+    //  Karten: anlegen, bearbeiten, löschen, verschieben
+    // =====================================================
+    function checkTranslation(val) {
+        const clean = val.toLowerCase().trim();
+        const box = document.getElementById('translation-suggestion');
+        if (dictionary[clean]) {
+            document.getElementById('suggestion-text').innerText = "💡 Vorschlag: " + dictionary[clean];
+            box.classList.remove('hidden');
+        } else { box.classList.add('hidden'); }
+    }
     function applyTranslation() {
-        let val = document.getElementById('new-card-term').value.toLowerCase().trim();
+        const val = document.getElementById('new-card-term').value.toLowerCase().trim();
         if (dictionary[val]) {
             document.getElementById('new-card-def').value = dictionary[val];
             document.getElementById('translation-suggestion').classList.add('hidden');
         }
     }
 
-    function getCardTerm(c) { return c.q !== undefined ? c.q : (c.term !== undefined ? c.term : ""); }
-    function getCardDef(c) { return c.a !== undefined ? c.a : (c.def !== undefined ? c.def : ""); }
-    // Status wird getrennt pro Lernrichtung gespeichert:
-    // fwd -> c.s (bzw. altes c.status), rev -> c.sr
-    function getCardStatus(c) {
-        if (direction === 'rev') return c.sr !== undefined ? c.sr : "offen";
-        return c.s !== undefined ? c.s : (c.status !== undefined ? c.status : "offen");
-    }
-    function setCardStatus(c, status) {
-        if (direction === 'rev') { c.sr = status; }
-        else { c.s = status; c.status = status; }
-    }
-    // Was wird gefragt / was ist die richtige Antwort – je nach Richtung
-    function getPrompt(c) { return direction === 'rev' ? getCardDef(c) : getCardTerm(c); }
-    function getAnswer(c) { return direction === 'rev' ? getCardTerm(c) : getCardDef(c); }
-
-    function directionToggleHtml() {
-        return `
-            <div class="dir-toggle">
-                <div class="dir-btn ${direction==='fwd'?'active':''}" onclick="setDirection('fwd')">Begriff → Übersetzung<small>z. B. Deutsch → Englisch</small></div>
-                <div class="dir-btn ${direction==='rev'?'active':''}" onclick="setDirection('rev')">Übersetzung → Begriff<small>z. B. Englisch → Deutsch</small></div>
-            </div>
-        `;
-    }
-    function setDirection(d) {
-        direction = d;
-        try { localStorage.setItem('karteiDirection', d); } catch(e) {}
-        render();
-    }
-
-    // ---------- Duplikat-Prüfung ----------
     function checkDuplicate() {
         const box = document.getElementById('duplicate-warning');
         const termVal = normalizeAnswer(document.getElementById('new-card-term').value);
         const defVal = normalizeAnswer(document.getElementById('new-card-def').value);
         if (!termVal && !defVal) { box.classList.add('hidden'); return; }
-
-        let matches = [];
-        (appData.folders || []).forEach(f => {
+        const matches = [];
+        appData.folders.forEach(f => {
             (f.cards || []).forEach(c => {
                 if (c === editingCard) return;
                 const t = normalizeAnswer(getCardTerm(c));
@@ -261,45 +1157,14 @@
                 if (hit) matches.push({ folder: f.name, term: getCardTerm(c), def: getCardDef(c) });
             });
         });
-
         if (matches.length === 0) { box.classList.add('hidden'); return; }
         let html = `<div>⚠️ Schon vorhanden${matches.length > 1 ? ' (' + matches.length + '×)' : ''}:</div>`;
         matches.slice(0, 3).forEach(m => {
-            html += `<div>• <b>${escapeHtml(m.term)}</b> – ${escapeHtml(m.def)} <span style="opacity:0.75;">(Ordner: ${escapeHtml(m.folder)})</span></div>`;
+            html += `<div>• <b>${esc(m.term)}</b> – ${esc(m.def)} <span style="opacity:0.75;">(Ordner: ${esc(m.folder)})</span></div>`;
         });
         if (matches.length > 3) html += `<div>… und ${matches.length - 3} weitere</div>`;
         box.innerHTML = html;
         box.classList.remove('hidden');
-    }
-
-    // ---------- Bilder ----------
-    let pendingImage = null;
-    let editingCard = null; // Karte, die gerade bearbeitet wird (null = neue Karte)
-
-    function updateCardModalMode() {
-        const editing = !!editingCard;
-        document.getElementById('card-modal-title').innerText = editing ? 'Karte bearbeiten' : 'Neue Karteikarte';
-        document.getElementById('card-next-btn').innerText = editing ? 'Speichern' : 'OK & Nächste Karte';
-        document.getElementById('card-done-btn').classList.toggle('hidden', editing);
-        document.getElementById('card-cancel-btn').classList.toggle('hidden', !editing);
-    }
-
-    function editCard(cIdx) {
-        let folder = (appData.folders || []).find(f => f.id === view.currentFolderId);
-        if (!folder || !folder.cards || !folder.cards[cIdx]) return;
-        editingCard = folder.cards[cIdx];
-        toggleCardModal(true);
-    }
-
-    function saveEditedCard() {
-        const term = document.getElementById('new-card-term').value.trim();
-        const def = document.getElementById('new-card-def').value.trim();
-        if (!term || !def) { alert("Bitte Begriff und Übersetzung ausfüllen."); return; }
-        editingCard.q = term;
-        editingCard.a = def;
-        if (pendingImage) editingCard.img = pendingImage; else delete editingCard.img;
-        saveData();
-        toggleCardModal(false);
     }
 
     function handleImage(input) {
@@ -309,16 +1174,13 @@
         reader.onload = e => {
             const img = new Image();
             img.onload = () => {
-                // Verkleinern, damit der Speicher im Browser nicht voll läuft
                 const maxSide = 500;
                 const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
-                const w = Math.round(img.width * scale);
-                const h = Math.round(img.height * scale);
+                const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
                 const canvas = document.createElement('canvas');
                 canvas.width = w; canvas.height = h;
                 const ctx = canvas.getContext('2d');
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h);
                 ctx.drawImage(img, 0, 0, w, h);
                 pendingImage = canvas.toDataURL('image/jpeg', 0.75);
                 showImagePreview();
@@ -328,390 +1190,181 @@
         };
         reader.readAsDataURL(file);
     }
-
     function showImagePreview() {
         const box = document.getElementById('img-preview');
         const el = document.getElementById('img-preview-el');
-        if (pendingImage) {
-            el.src = pendingImage;
-            box.classList.remove('hidden');
-        } else {
-            el.removeAttribute('src');
-            box.classList.add('hidden');
-        }
+        if (pendingImage) { el.src = pendingImage; box.classList.remove('hidden'); }
+        else { el.removeAttribute('src'); box.classList.add('hidden'); }
     }
-
     function clearImage() {
         pendingImage = null;
         document.getElementById('new-card-img').value = '';
         showImagePreview();
     }
 
-    function saveData() {
-        try {
-            localStorage.setItem('karteiFullData', JSON.stringify(appData));
-        } catch (e) {
-            alert("Speicher voll! Bitte lösche ein paar Bilder oder Karten und sichere deine Daten über 📥.");
+    function updateCardModalMode() {
+        const editing = !!editingCard;
+        document.getElementById('card-modal-title').innerText = editing ? 'Karte bearbeiten' : 'Neue Karteikarte';
+        document.getElementById('card-next-btn').innerText = editing ? 'Speichern' : 'OK & Nächste Karte';
+        document.getElementById('card-done-btn').classList.toggle('hidden', editing);
+        document.getElementById('card-cancel-btn').classList.toggle('hidden', !editing);
+    }
+    function resetCardForm() {
+        document.getElementById('new-card-term').value = '';
+        document.getElementById('new-card-def').value = '';
+        document.getElementById('new-card-note').value = '';
+        document.getElementById('translation-suggestion').classList.add('hidden');
+        clearImage();
+        checkDuplicate();
+        document.getElementById('new-card-term').focus();
+    }
+    function toggleCardModal(s) {
+        document.getElementById('card-modal').classList.toggle('hidden', !s);
+        if (!s) { editingCard = null; return; }
+        resetCardForm();
+        if (editingCard) {
+            document.getElementById('new-card-term').value = getCardTerm(editingCard);
+            document.getElementById('new-card-def').value = getCardDef(editingCard);
+            document.getElementById('new-card-note').value = editingCard.note || '';
+            if (editingCard.img) { pendingImage = editingCard.img; showImagePreview(); }
         }
-        render();
+        updateCardModalMode();
+        checkDuplicate();
     }
-
-    function getSubfolders(parentId) {
-        return (appData.folders || []).filter(f => f.parent === parentId);
+    function editCard(cIdx) {
+        const f = getFolder(view.currentFolderId);
+        if (!f || !f.cards || !f.cards[cIdx]) return;
+        editingCard = f.cards[cIdx];
+        toggleCardModal(true);
     }
-
-    function getAllSubfolderIds(folderId) {
-        let ids = [folderId];
-        getSubfolders(folderId).forEach(child => {
-            ids = ids.concat(getAllSubfolderIds(child.id));
-        });
-        return ids;
+    function saveEditedCard() {
+        const term = document.getElementById('new-card-term').value.trim();
+        const def = document.getElementById('new-card-def').value.trim();
+        const note = document.getElementById('new-card-note').value.trim();
+        if (!term || !def) { alert("Bitte Begriff und Übersetzung ausfüllen."); return; }
+        editingCard.q = term;
+        editingCard.a = def;
+        if (note) editingCard.note = note; else delete editingCard.note;
+        if (pendingImage) editingCard.img = pendingImage; else delete editingCard.img;
+        saveData();
+        toggleCardModal(false);
     }
-
-    function getCardsForFolder(folderId) {
-        let folder = (appData.folders || []).find(f => f.id === folderId);
-        return folder ? (folder.cards || []) : [];
-    }
-
-    function getAllCardsRecursive(folderId) {
-        let ids = getAllSubfolderIds(folderId);
-        let cards = [];
-        ids.forEach(id => { cards = cards.concat(getCardsForFolder(id)); });
-        return cards;
-    }
-
-    function render() {
-        const app = document.getElementById('app');
-
-        if (view.name === "home") {
-            let rootFolders = getSubfolders(null);
-            let html = `
-                <div class="header">
-                    <div class="logo">🗂️ Kartei</div>
-                    <div style="display:flex; gap:10px;">
-                        <div class="icon-box" onclick="toggleBackup(true)">📥</div>
-                        <div class="icon-box" onclick="toggleFolderModal(true)">➕</div>
-                    </div>
-                </div>
-            `;
-            if(rootFolders.length === 0) {
-                html += `<div class="banner"><span>Noch keine Ordner. Klicke auf 📥 für den Sicherungstext!</span></div>`;
-            }
-            rootFolders.forEach((f) => {
-                let letter = f.name.charAt(0).toUpperCase();
-                let subfolders = getSubfolders(f.id);
-                let allCards = getAllCardsRecursive(f.id);
-                html += `
-                    <div class="card-item" onclick="openFolder('${f.id}')">
-                        <div style="display:flex; align-items:center;">
-                            <div class="badge-letter" style="background:${f.color || '#bae6fd'}">${letter}</div>
-                            <div>
-                                <h3 style="margin:0; font-size:17px; font-weight:700;">${f.name}</h3>
-                                <span style="font-size:13px; color:var(--text-muted); font-weight:600;">${allCards.length} Karten ${subfolders.length > 0 ? '· ' + subfolders.length + ' Unterordner' : ''}</span>
-                            </div>
-                        </div>
-                        <span style="color:#94a3b8; cursor:pointer;" onclick="event.stopPropagation(); deleteFolder('${f.id}')">🗑️</span>
-                    </div>
-                `;
-            });
-            app.innerHTML = html;
+    function createCard(closeModal) {
+        if (editingCard) { saveEditedCard(); return; }
+        const term = document.getElementById('new-card-term').value.trim();
+        const def = document.getElementById('new-card-def').value.trim();
+        const note = document.getElementById('new-card-note').value.trim();
+        if (!term || !def) {
+            if (closeModal) toggleCardModal(false);
+            return;
         }
-        else if (view.name === "folder") {
-            let f = (appData.folders || []).find(folder => folder.id === view.currentFolderId);
-            if (!f) { goHome(); return; }
-
-            let subfolders = getSubfolders(f.id);
-            let directCards = f.cards || [];
-            let allCardsInBranch = getAllCardsRecursive(f.id);
-
-            let richtig = allCardsInBranch.filter(c => getCardStatus(c) === 'richtig').length;
-            let mittel = allCardsInBranch.filter(c => getCardStatus(c) === 'mittel').length;
-            let falsch = allCardsInBranch.filter(c => getCardStatus(c) === 'falsch').length;
-            let offen = allCardsInBranch.filter(c => getCardStatus(c) === 'offen' || !getCardStatus(c)).length;
-
-            let html = `
-                <a class="back-link" onclick="${f.parent ? `openFolder('${f.parent}')` : 'goHome()'}">‹ ${f.parent ? 'Übergeordneter Ordner' : 'Hauptübersicht'}</a>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h1 style="margin:0; font-size:30px; font-weight:800;">${f.name}</h1>
-                    <div class="icon-box" onclick="toggleCardModal(true)">➕</div>
-                </div>
-                ${directionToggleHtml()}
-                <div style="display:flex; gap:10px; margin: 16px 0; flex-wrap:wrap;">
-                    <span style="background:var(--green-bg); color:#065f46; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px;">● Richtig ${richtig}</span>
-                    <span style="background:var(--yellow-bg); color:#92400e; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px;">● Mittel ${mittel}</span>
-                    <span style="background:var(--red-bg); color:#991b1b; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px;">● Falsch ${falsch}</span>
-                    <span style="background:#f1f5f9; color:#475569; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px;">● Offen ${offen}</span>
-                </div>
-                <div style="display:flex; gap:12px; margin-bottom:28px;">
-                    <button class="btn-primary" style="width:auto;" onclick="openSetup()">Prüfung starten</button>
-                    <button class="btn-secondary" style="width:auto; margin:0;" onclick="toggleFolderModal(true)">+ Unterordner anlegen</button>
-                </div>
-            `;
-
-            if (subfolders.length > 0) {
-                html += `<h3 style="color:var(--text-muted); font-size:13px; text-transform:uppercase; margin-bottom:12px;">Unterordner</h3>`;
-                subfolders.forEach(sub => {
-                    html += `
-                        <div class="card-item" onclick="openFolder('${sub.id}')">
-                            <div style="display:flex; align-items:center;">
-                                <div class="badge-letter" style="background:${sub.color || '#dcfce7'}">${sub.name.charAt(0).toUpperCase()}</div>
-                                <div>
-                                    <h3 style="margin:0; font-size:17px; font-weight:700;">${sub.name}</h3>
-                                    <span style="font-size:13px; color:var(--text-muted); font-weight:600;">${getAllCardsRecursive(sub.id).length} Karten</span>
-                                </div>
-                            </div>
-                            <span style="color:#94a3b8; cursor:pointer;" onclick="event.stopPropagation(); deleteFolder('${sub.id}')">🗑️</span>
-                        </div>
-                    `;
-                });
-            }
-
-            html += `<h3 style="color:var(--text-muted); font-size:13px; text-transform:uppercase; margin-top:24px; margin-bottom:12px;">Karten in diesem Ordner</h3>`;
-            if (directCards.length === 0) html += `<p style="color:var(--text-muted); font-size:14px;">Keine direkten Karten.</p>`;
-
-            directCards.forEach((c, cIdx) => {
-                let st = getCardStatus(c);
-                let statusColor = st === 'richtig' ? 'var(--green)' : st === 'mittel' ? 'var(--yellow)' : st === 'falsch' ? 'var(--red)' : '#cbd5e1';
-                html += `
-                    <div class="card-item" style="cursor:default;">
-                        <div>
-                            <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${statusColor}; margin-right:10px;"></span>
-                            <strong style="font-size:16px;">${getCardTerm(c)}</strong>
-                            <div style="color:var(--text-muted); font-size:14px; margin-left:20px; font-weight:500;">${getCardDef(c)}</div>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            ${c.img ? `<img class="thumb" src="${c.img}" alt="">` : ''}
-                            <span style="color:#94a3b8; cursor:pointer;" onclick="editCard(${cIdx})">✏️</span>
-                            <span style="color:#94a3b8; cursor:pointer;" onclick="deleteCard(${cIdx})">🗑️</span>
-                        </div>
-                    </div>
-                `;
-            });
-            app.innerHTML = html;
+        const folder = getFolder(view.currentFolderId);
+        if (folder) {
+            if (!folder.cards) folder.cards = [];
+            const newCard = { id: "card_" + Date.now() + "_" + Math.floor(Math.random() * 1000), q: term, a: def, s: 'offen' };
+            if (note) newCard.note = note;
+            if (pendingImage) newCard.img = pendingImage;
+            folder.cards.push(newCard);
+            saveData();
         }
-        else if (view.name === "setup") {
-            let f = (appData.folders || []).find(folder => folder.id === view.currentFolderId);
-            updateSetupCards();
-            app.innerHTML = `
-                <a class="back-link" onclick="openFolder('${view.currentFolderId}')">‹ Ordner</a>
-                <h1 style="margin:0; font-size:28px; font-weight:800;">Prüfung starten</h1>
-                <p style="color:var(--text-muted); margin-top:2px; font-weight:600;">${f.name}</p>
-                <div class="section-title">Lernrichtung</div>
-                ${directionToggleHtml()}
-                <div class="section-title">Welche Karten?</div>
-                <div class="grid-2">
-                    <div class="option-box ${setup.filter==='all'?'active':''}" onclick="setFilter('all')"><span>Alle Karten</span> <span class="count-badge">${getAllCardsRecursive(f.id).length}</span></div>
-                    <div class="option-box ${setup.filter==='mittel_falsch'?'active':''}" onclick="setFilter('mittel_falsch')"><span>Mittel und falsch</span> <span class="count-badge">${getAllCardsRecursive(f.id).filter(c=>getCardStatus(c)==='mittel'||getCardStatus(c)==='falsch').length}</span></div>
-                    <div class="option-box ${setup.filter==='falsch'?'active':''}" onclick="setFilter('falsch')"><span>Nur falsch</span> <span class="count-badge">${getAllCardsRecursive(f.id).filter(c=>getCardStatus(c)==='falsch').length}</span></div>
-                    <div class="option-box ${setup.filter==='offen'?'active':''}" onclick="setFilter('offen')"><span>Noch nicht geprüft</span> <span class="count-badge">${getAllCardsRecursive(f.id).filter(c=>getCardStatus(c)==='offen'||!getCardStatus(c)).length}</span></div>
-                </div>
-                <div class="section-title">Reihenfolge</div>
-                <div class="dir-toggle">
-                    <div class="dir-btn ${setup.shuffle?'active':''}" onclick="setShuffle(true)">🔀 Gemischt</div>
-                    <div class="dir-btn ${!setup.shuffle?'active':''}" onclick="setShuffle(false)">➡️ Der Reihe nach</div>
-                </div>
-                <div class="section-title">Wie viele Fragen?</div>
-                <div class="slider-box">
-                    <div class="big-number" id="count-display">${setup.questionCount}</div>
-                    <div class="sub-text">von ${setup.availableCards.length} Karten</div>
-                    <input type="range" min="1" max="${Math.max(1, setup.availableCards.length)}" value="${setup.questionCount}" oninput="updateCount(this.value)">
-                    <button class="btn-secondary" onclick="setMaxCount()">Alle ${setup.availableCards.length} Fragen</button>
-                </div>
-                <button class="btn-primary" style="margin-top:24px;" ${setup.availableCards.length===0?'disabled':''} onclick="startQuiz()">Starten</button>
-            `;
-        }
-        else if (view.name === "quiz") {
-            let card = quiz.cards[quiz.index];
-            if(!card) {
-                app.innerHTML = `<div style="text-align:center; padding:40px;"><h2>🎉 Prüfung abgeschlossen!</h2><button class="btn-primary" onclick="openFolder('${view.currentFolderId}')">Zurück zum Ordner</button></div>`;
-                return;
-            }
-            let currentFolder = (appData.folders || []).find(f => f.id === view.currentFolderId);
-            let userAns = quiz.userAnswer || "";
-            let isMatch = userAns.trim() !== "" && normalizeAnswer(userAns) === normalizeAnswer(getAnswer(card));
-            let mineClass = userAns.trim() === "" ? "" : (isMatch ? "ok" : "nok");
-
-            let bodyHtml;
-            if (quiz.flipped) {
-                bodyHtml = `
-                    <div class="answer-compare">
-                        <div class="answer-row mine ${mineClass}">
-                            <div class="answer-label">Deine Antwort ${userAns.trim() === "" ? "" : (isMatch ? "✓" : "✗")}</div>
-                            <div class="answer-value">${userAns.trim() === "" ? "<em>– nichts eingegeben –</em>" : escapeHtml(userAns)}</div>
-                        </div>
-                        <div class="answer-row correct">
-                            <div class="answer-label">Richtige Antwort</div>
-                            <div class="answer-value">${escapeHtml(getAnswer(card))}</div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                bodyHtml = `<input type="text" id="quiz-answer" class="answer-input" placeholder="Schreibe deine Antwort ..." value="${escapeHtml(userAns)}" autocomplete="off" oninput="quiz.userAnswer = this.value" onkeydown="if(event.key==='Enter'){flipQuizCard();}">`;
-            }
-
-            app.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                    <a class="back-link" onclick="openFolder('${view.currentFolderId}')" style="margin:0;">‹ Pausieren</a>
-                    <span style="font-weight:700; color:var(--text-muted); font-size:14px;">Frage ${quiz.index + 1} von ${quiz.cards.length}</span>
-                </div>
-                <div class="paper-card">
-                    <div class="paper-header"><span>Frage · ${direction === 'rev' ? 'Übersetzung → Begriff' : 'Begriff → Übersetzung'}</span><span>${currentFolder ? currentFolder.name : ''}</span></div>
-                    <div class="paper-body">
-                        <div class="question-text">${escapeHtml(getPrompt(card))}</div>
-                        ${bodyHtml}
-                        ${quiz.flipped && card.img ? `<img class="card-img" src="${card.img}" alt="">` : ''}
-                    </div>
-                </div>
-                <button class="btn-primary" style="margin-bottom:16px;" onclick="flipQuizCard()">${quiz.flipped ? 'Zurück zur Eingabe' : 'Umdrehen'}</button>
-                <div class="rating-grid">
-                    <button class="btn-rate btn-green" ${!quiz.flipped?'disabled':''} onclick="rateQuizCard('richtig')">Richtig</button>
-                    <button class="btn-rate btn-yellow" ${!quiz.flipped?'disabled':''} onclick="rateQuizCard('mittel')">Mittel</button>
-                    <button class="btn-rate btn-red" ${!quiz.flipped?'disabled':''} onclick="rateQuizCard('falsch')">Falsch</button>
-                </div>
-            `;
-
-            if (!quiz.flipped) {
-                let inp = document.getElementById('quiz-answer');
-                if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
-            }
-        }
+        if (closeModal) toggleCardModal(false);
+        else resetCardForm();
+    }
+    function deleteCard(cIdx) {
+        const folder = getFolder(view.currentFolderId);
+        if (folder && folder.cards && confirm("Karte wirklich löschen?")) { folder.cards.splice(cIdx, 1); saveData(); }
     }
 
-    function goHome() { view = { name: "home", currentFolderId: null }; render(); }
-    function openFolder(id) { view = { name: "folder", currentFolderId: id }; render(); }
-    function openSetup() { view.name = "setup"; render(); }
-
-    function updateSetupCards() {
-        let cards = getAllCardsRecursive(view.currentFolderId);
-        if(setup.filter === 'mittel_falsch') setup.availableCards = cards.filter(c => getCardStatus(c) === 'mittel' || getCardStatus(c) === 'falsch');
-        else if(setup.filter === 'falsch') setup.availableCards = cards.filter(c => getCardStatus(c) === 'falsch');
-        else if(setup.filter === 'offen') setup.availableCards = cards.filter(c => getCardStatus(c) === 'offen' || !getCardStatus(c));
-        else setup.availableCards = [...cards];
-        setup.questionCount = Math.min(Math.max(1, setup.questionCount), setup.availableCards.length || 1);
+    function moveCard(cIdx) {
+        const f = getFolder(view.currentFolderId);
+        if (!f || !f.cards || !f.cards[cIdx]) return;
+        const others = appData.folders.filter(x => x.id !== f.id);
+        if (others.length === 0) { alert("Es gibt keinen anderen Ordner. Lege zuerst einen weiteren Ordner an."); return; }
+        movingCard = f.cards[cIdx]; movingFromFolder = f;
+        document.getElementById('move-card-label').innerText = getCardTerm(movingCard) + ' – ' + getCardDef(movingCard);
+        document.getElementById('move-target').innerHTML = others
+            .map(x => ({ id: x.id, label: folderPath(x) }))
+            .sort((a, b) => a.label.localeCompare(b.label))
+            .map(x => `<option value="${x.id}">${esc(x.label)}</option>`).join('');
+        document.getElementById('move-modal').classList.remove('hidden');
     }
-
-    function setShuffle(v) {
-        setup.shuffle = v;
-        try { localStorage.setItem('karteiShuffle', v ? '1' : '0'); } catch(e) {}
-        render();
+    function toggleMoveModal(s) {
+        document.getElementById('move-modal').classList.toggle('hidden', !s);
+        if (!s) { movingCard = null; movingFromFolder = null; }
     }
-    function setFilter(f) { setup.filter = f; render(); }
-    function updateCount(val) { setup.questionCount = parseInt(val); document.getElementById('count-display').innerText = val; }
-    function setMaxCount() { setup.questionCount = setup.availableCards.length; render(); }
-    function startQuiz() { let pool = [...setup.availableCards];
-        if (setup.shuffle) {
-            for (let i = pool.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                const tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
-            }
-        }
-        quiz.cards = pool.slice(0, setup.questionCount); quiz.index = 0; quiz.flipped = false; quiz.userAnswer = ""; view.name = "quiz"; render(); }
-
-    function flipQuizCard() {
-        // Eingabe sichern, bevor neu gerendert wird
-        let inp = document.getElementById('quiz-answer');
-        if (inp) quiz.userAnswer = inp.value;
-        quiz.flipped = !quiz.flipped;
-        render();
-    }
-
-    function rateQuizCard(status) {
-        let card = quiz.cards[quiz.index];
-        setCardStatus(card, status);
-        quiz.index++;
-        quiz.flipped = false;
-        quiz.userAnswer = "";
+    function confirmMove() {
+        const target = getFolder(document.getElementById('move-target').value);
+        if (!target || !movingCard || !movingFromFolder) { toggleMoveModal(false); return; }
+        movingFromFolder.cards = (movingFromFolder.cards || []).filter(c => c !== movingCard);
+        if (!target.cards) target.cards = [];
+        target.cards.push(movingCard);
+        toggleMoveModal(false);
         saveData();
     }
 
-    function toggleBackup(s) { document.getElementById('backup-modal').classList.toggle('hidden', !s); if(s) document.getElementById('backup-text').value = JSON.stringify(appData); }
-    function copyBackup() { let t = document.getElementById('backup-text'); t.select(); navigator.clipboard.writeText(t.value); alert("Kopiert!"); }
-    
-    function restoreData() {
-        try {
-            let parsed = JSON.parse(document.getElementById('restore-input').value);
-            appData = parsed.folders ? parsed : { folders: parsed };
-            saveData(); toggleBackup(false); goHome(); alert("Sicherung erfolgreich geladen!");
-        } catch(e) { alert("Ungültiges JSON-Format!"); }
+    // =====================================================
+    //  Import / Export
+    // =====================================================
+    function toggleIoModal(s) {
+        document.getElementById('io-modal').classList.toggle('hidden', !s);
+        if (s) document.getElementById('io-text').value = '';
+    }
+    function importCards() {
+        const folder = getFolder(view.currentFolderId);
+        if (!folder) { alert("Bitte zuerst einen Ordner öffnen."); return; }
+        const lines = document.getElementById('io-text').value.split(/\r?\n/);
+        let added = 0, skippedDup = 0, invalid = 0;
+        const existing = new Set();
+        appData.folders.forEach(f => (f.cards || []).forEach(c => existing.add(normalizeAnswer(getCardTerm(c)) + '||' + normalizeAnswer(getCardDef(c)))));
+        lines.forEach(line => {
+            if (!line.trim()) return;
+            let parts;
+            if (line.includes('\t')) parts = line.split('\t');
+            else if (line.includes(';')) parts = line.split(';');
+            else if (line.includes(' | ')) parts = line.split(' | ');
+            else if (line.includes(' = ')) parts = line.split(' = ');
+            else { invalid++; return; }
+            parts = parts.map(p => p.trim());
+            const term = parts[0], def = parts[1], note = parts[2] || '';
+            if (!term || !def) { invalid++; return; }
+            const key = normalizeAnswer(term) + '||' + normalizeAnswer(def);
+            if (existing.has(key)) { skippedDup++; return; }
+            existing.add(key);
+            if (!folder.cards) folder.cards = [];
+            const card = { id: "card_" + Date.now() + "_" + Math.floor(Math.random() * 100000), q: term, a: def, s: 'offen' };
+            if (note) card.note = note;
+            folder.cards.push(card);
+            added++;
+        });
+        saveData();
+        document.getElementById('io-text').value = '';
+        alert(added + " Karten importiert" + (skippedDup ? ", " + skippedDup + " übersprungen (schon vorhanden)" : "") + (invalid ? ", " + invalid + " Zeilen nicht erkannt" : "") + ".");
+    }
+    function exportCards() {
+        const cards = getAllCardsRecursive(view.currentFolderId);
+        const clean = s => String(s).replace(/[;\t\r\n]+/g, ',');
+        document.getElementById('io-text').value = cards.map(c => clean(getCardTerm(c)) + ';' + clean(getCardDef(c)) + (c.note ? ';' + clean(c.note) : '')).join('\n');
+    }
+    function copyExport() {
+        const t = document.getElementById('io-text');
+        t.select();
+        try { navigator.clipboard.writeText(t.value); } catch (e) { document.execCommand('copy'); }
+        alert("Kopiert!");
     }
 
-    function toggleFolderModal(s) { document.getElementById('folder-modal').classList.toggle('hidden', !s); }
-    function createFolder() {
-        let name = document.getElementById('new-folder-name').value.trim();
-        if(name) { 
-            if (!appData.folders) appData.folders = [];
-            appData.folders.push({ id: "folder_" + Date.now(), name: name, color: "#bae6fd", parent: view.currentFolderId, cards: [] }); 
-            document.getElementById('new-folder-name').value = '';
-            saveData(); toggleFolderModal(false); 
-        }
-    }
-    function deleteFolder(id) { 
-        if(confirm("Ordner wirklich löschen?")) { 
-            let idsToDelete = getAllSubfolderIds(id);
-            appData.folders = (appData.folders || []).filter(f => !idsToDelete.includes(f.id));
-            saveData(); if(view.currentFolderId === id) goHome();
-        } 
-    }
-
-    function toggleCardModal(s) { 
-        document.getElementById('card-modal').classList.toggle('hidden', !s);
-        if (!s) editingCard = null;
-        if(s) {
-            document.getElementById('new-card-term').value = '';
-            document.getElementById('new-card-def').value = '';
-            document.getElementById('translation-suggestion').classList.add('hidden');
-            clearImage();
-            if (editingCard) {
-                document.getElementById('new-card-term').value = getCardTerm(editingCard);
-                document.getElementById('new-card-def').value = getCardDef(editingCard);
-                if (editingCard.img) { pendingImage = editingCard.img; showImagePreview(); }
-            }
-            updateCardModalMode();
-            checkDuplicate();
-            document.getElementById('new-card-term').focus();
-        }
-    }
-    
-    function createCard(closeModal) {
-        if (editingCard) { saveEditedCard(); return; }
-        let term = document.getElementById('new-card-term').value.trim();
-        let def = document.getElementById('new-card-def').value.trim();
-        if(term && def && view.currentFolderId) { 
-            let folder = (appData.folders || []).find(f => f.id === view.currentFolderId);
-            if(folder) {
-                if(!folder.cards) folder.cards = [];
-                let newCard = { id: "card_" + Date.now(), q: term, a: def, s: 'offen' };
-                if (pendingImage) newCard.img = pendingImage;
-                folder.cards.push(newCard);
-                clearImage();
-                // Felder werden gleich geleert -> Warnung danach aktualisieren
-                setTimeout(checkDuplicate, 0);
-                saveData(); 
-            }
-        }
-        if (closeModal) {
-            toggleCardModal(false);
-        } else {
-            document.getElementById('new-card-term').value = '';
-            document.getElementById('new-card-def').value = '';
-            document.getElementById('translation-suggestion').classList.add('hidden');
-            document.getElementById('new-card-term').focus();
-        }
-    }
-
-    function deleteCard(cIdx) { 
-        let folder = (appData.folders || []).find(f => f.id === view.currentFolderId);
-        if(folder && folder.cards) { folder.cards.splice(cIdx, 1); saveData(); }
-    }
-
+    // =====================================================
+    //  Tastatur
+    // =====================================================
     window.addEventListener('keydown', (e) => {
-        if(view.name === "quiz" && quiz.flipped) {
-            if(e.key === "1") rateQuizCard('richtig');
-            if(e.key === "2") rateQuizCard('mittel');
-            if(e.key === "3") rateQuizCard('falsch');
-        }
+        if (view.name !== "quiz" || !quiz.flipped) return;
+        const tag = document.activeElement ? document.activeElement.tagName : '';
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+        if (e.key === "1") rateQuizCard('richtig');
+        if (e.key === "2") rateQuizCard('mittel');
+        if (e.key === "3") rateQuizCard('falsch');
     });
 
+    applyTheme();
     render();
 </script>
 
